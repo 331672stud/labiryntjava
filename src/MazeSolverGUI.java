@@ -15,15 +15,15 @@ public class MazeSolverGUI extends JFrame {
     private char[][] mazeArray;
 
     public MazeSolverGUI() {
-        setTitle("Maze Solver");
-        setSize(600, 400);
+        setTitle("LabSolver");
+        setSize(960, 540);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Inicjalizacja guzikow
-        loadTextButton = new JButton("Load Text Maze");
-        loadBinaryButton = new JButton("Load Binary Maze");
-        findPathButton = new JButton("Find Shortest Path");
-        selectStartButton = new JButton("Select Start Point");
+        loadTextButton = new JButton("Wczytaj labirynt z pliku tekstowego");
+        loadBinaryButton = new JButton("Wczytaj labirynt z pliku binarnego");
+        findPathButton = new JButton("Znajdz najkrotsza sciezke");
+        selectStartButton = new JButton("Wybierz punkt poczatkowy i koncowy");
 
         // wczytywanie cos robi
         loadTextButton.addActionListener(new LoadTextListener());
@@ -32,14 +32,16 @@ public class MazeSolverGUI extends JFrame {
         // guziki wczytywania
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
+        topPanel.setBackground(Color.LIGHT_GRAY);
         topPanel.add(loadTextButton);
         topPanel.add(loadBinaryButton);
 
-        //guziki od pracy z labiryntem
+        //guziki do pracy z labiryntem
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
         bottomPanel.add(findPathButton);
         bottomPanel.add(selectStartButton);
+        bottomPanel.setBackground(Color.LIGHT_GRAY);
 
         // poczatkowy panel
         JPanel contentPanel = new JPanel(new BorderLayout());
