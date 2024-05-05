@@ -1,6 +1,10 @@
+import javax.swing.AbstractButton;
 import javax.swing.JFrame;
+//import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 
 public class GUI {
@@ -20,16 +24,30 @@ public class GUI {
         window.setLocationRelativeTo(null);
 
         //pasek z przyciskami
-        JPanel panel1 = new JPanel();
-        panel1.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
-        window.add(panel1, BorderLayout.SOUTH);
-        panel1.setBackground(Color.LIGHT_GRAY);
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.CENTER, 10, 5));
+        window.add(panel, BorderLayout.SOUTH);
+        panel.setBackground(Color.LIGHT_GRAY);
 
-        Button b1 = new Button("Znajdz najkrotsza sciezke");
-        panel1.add(b1);
+        Button b1 = new Button("Wybierz punkty wejscia i wyjscia z labiryntu");
+        panel.add(b1);
 
-        Button b2 = new Button("Wybierz punkty wejscia i wyjscia z labiryntu");
-        panel1.add(b2);
+        b1.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+            // na bledy
+            //JOptionPane.showMessageDialog(window, "blad");
+            //odklikniecie przycisku
+            AbstractButton abstractButton = (AbstractButton) e.getSource();
+            abstractButton.getModel().setPressed(false);
+            abstractButton.getModel().setArmed(false);
+            }
+        });
+
+        Button b2 = new Button("Znajdz najkrotsza sciezke");
+        panel.add(b2);
+
+
+        //panel.setPreferredSize(new Dimension(100, 30));
 
         window.setVisible(true);
     }
