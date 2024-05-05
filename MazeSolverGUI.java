@@ -7,38 +7,32 @@ public class MazeSolverGUI extends JFrame {
 
     public MazeSolverGUI() {
         setTitle("Maze Solver");
-        setSize(600, 400);
+        setSize(960, 540);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // Initialize components
+        //guziki
         loadTextButton = new JButton("Wczytaj plik tekstowy");
         loadBinaryButton = new JButton("Wczytaj plik binarny");
         findPathButton = new JButton("Znajdź najkrótszą ścieżkę");
         selectStartButton = new JButton("Wybierz punkty Start-Koniec");
-
-        // Top panel
+        //menu wczytywania
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.add(loadTextButton);
         topPanel.add(loadBinaryButton);
-
-        // Bottom panel
+        //wyszukiwanie/wybieranie
         bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
         bottomPanel.add(findPathButton);
         bottomPanel.add(selectStartButton);
-
-        // Maze panel
+        //panel srodkowy
         mazePanel = new JPanel();
         mazePanel.setPreferredSize(new Dimension(400, 300));
         mazePanel.setBackground(Color.WHITE);
-
-        // Create a JScrollPane and add the mazePanel to it
+        //scrollbary
         JScrollPane scrollPane = new JScrollPane(mazePanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        // Add components to frame
         add(topPanel, BorderLayout.NORTH);
         add(bottomPanel, BorderLayout.SOUTH);
         add(scrollPane, BorderLayout.CENTER);
