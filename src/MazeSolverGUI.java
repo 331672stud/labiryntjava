@@ -89,7 +89,18 @@ public class MazeSolverGUI extends JFrame {
     // Binarne wczytywanie
     private class LoadBinaryListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            // tu trzeba wczytywac binarnie
+            JFileChooser fileChooser = new JFileChooser();
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                try {
+                    loadMazeFromFile(selectedFile);
+                    mazePanel.repaint();
+                    adjustScrollPane();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
         }
     }
 
