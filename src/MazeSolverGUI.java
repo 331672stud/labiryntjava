@@ -25,14 +25,22 @@ public class MazeSolverGUI extends JFrame {
         findPathButton = new JButton("Znajdz najkrotsza sciezke");
         selectStartButton = new JButton("Wybierz punkt poczatkowy i koncowy");
 
+        loadTextButton.setFocusable(false);
+        loadBinaryButton.setFocusable(false);
+        findPathButton.setFocusable(false);
+        selectStartButton.setFocusable(false);
+
         // wczytywanie cos robi
         loadTextButton.addActionListener(new LoadTextListener());
         loadBinaryButton.addActionListener(new LoadBinaryListener());
+
+        JLabel pole = new JLabel("MENU:");
 
         // guziki wczytywania
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setBackground(Color.LIGHT_GRAY);
+        topPanel.add(pole, BorderLayout.WEST);
         topPanel.add(loadTextButton);
         topPanel.add(loadBinaryButton);
 
