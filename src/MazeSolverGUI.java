@@ -159,21 +159,33 @@ public class MazeSolverGUI extends JFrame {
         }
 
         @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (mazeArray != null) {
-                for (int row = 0; row < numRows; row++) {
-                    for (int col = 0; col < numCols; col++) {
-                        if (mazeArray[row][col] == 'X') {
-                            g.setColor(Color.BLACK);
-                        } else {
-                            g.setColor(Color.WHITE);
-                        }
-                        g.fillRect(col * cellSize, row * cellSize, cellSize, cellSize);
-                    }
+protected void paintComponent(Graphics g) {
+    super.paintComponent(g);
+    if (mazeArray != null) {
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+        int mazeWidth = numCols * cellSize;
+        int mazeHeight = numRows * cellSize;
+
+        // Calculate the offset to center the maze horizontally and vertically
+        int offsetX = (panelWidth - mazeWidth) / 2;
+        int offsetY = (panelHeight - mazeHeight) / 2;
+
+        for (int row = 0; row < numRows; row++) {
+            for (int col = 0; col < numCols; col++) {
+                if (mazeArray[row][col] == 'X') {
+                    g.setColor(Color.BLACK);
+                } else {
+                    g.setColor(Color.WHITE);
                 }
+                // Adjust the starting point for drawing each cell
+                int x = offsetX + col * cellSize;
+                int y = offsetY + row * cellSize;
+                g.fillRect(x, y, cellSize, cellSize);
             }
         }
+    }
+}
 
         @Override
         public Dimension getPreferredSize() {
