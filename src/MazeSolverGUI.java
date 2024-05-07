@@ -18,6 +18,7 @@ public class MazeSolverGUI extends JFrame {
         setTitle("LabSolver");
         setSize(960, 540);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         // Inicjalizacja guzikow
         loadTextButton = new JButton("Wczytaj labirynt z pliku tekstowego");
@@ -149,6 +150,7 @@ public class MazeSolverGUI extends JFrame {
         private int cellSize = 5; //rozmiar komorki
         private int numRows = 0;
         private int numCols = 0;
+
 
         //rozmiar labiryntu
         public void setMazeSize(int numRows, int numCols) {
