@@ -158,6 +158,7 @@ public class MazeSolverGUI extends JFrame {
             repaint();
         }
 
+
         @Override
 protected void paintComponent(Graphics g) {
     super.paintComponent(g);
@@ -167,7 +168,6 @@ protected void paintComponent(Graphics g) {
         int mazeWidth = numCols * cellSize;
         int mazeHeight = numRows * cellSize;
 
-        // Calculate the offset to center the maze horizontally and vertically
         int offsetX = (panelWidth - mazeWidth) / 2;
         int offsetY = (panelHeight - mazeHeight) / 2;
 
@@ -178,7 +178,6 @@ protected void paintComponent(Graphics g) {
                 } else {
                     g.setColor(Color.WHITE);
                 }
-                // Adjust the starting point for drawing each cell
                 int x = offsetX + col * cellSize;
                 int y = offsetY + row * cellSize;
                 g.fillRect(x, y, cellSize, cellSize);
