@@ -9,9 +9,10 @@ import java.io.IOException;
 
 public class MazeSolverGUI extends JFrame {
     private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton;
-    private JPanel topPanel, bottomPanel;
+    private JPanel topPanel, bottomPanel, sidePanel;
     private JScrollPane scrollPane;
     private MazePanel mazePanel;
+    private JLabel errorMessageLabel;
     private char[][] mazeArray;
 
     public MazeSolverGUI() {
@@ -64,7 +65,17 @@ public class MazeSolverGUI extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         contentPanel.add(scrollPane, BorderLayout.CENTER);
-        add(contentPanel);
+
+        // Boczny Panel
+        sidePanel = new JPanel();
+        sidePanel.setLayout(new BorderLayout());
+        errorMessageLabel = new JLabel();
+        sidePanel.add(errorMessageLabel, BorderLayout.CENTER);
+        sidePanel.setPreferredSize(new Dimension(200, getHeight()));
+        sidePanel.setBackground(Color.RED);
+
+        add(contentPanel, BorderLayout.CENTER);
+        add(sidePanel, BorderLayout.EAST);
 
         setVisible(true);
     }
@@ -139,6 +150,11 @@ public class MazeSolverGUI extends JFrame {
             scrollPane.revalidate();
             scrollPane.repaint();
         });
+    }
+
+    // wyświetla błędy
+    private void displayErrorMessage(String message) {
+        errorMessageLabel.setText(message);
     }
 
     public static void main(String[] args) {
