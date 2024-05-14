@@ -387,10 +387,13 @@ protected void paintComponent(Graphics g) {
                       break;
                     case 'P':
                         g.setColor(Color.GREEN);
+                        break;
                     case 'K':
                         g.setColor(Color.RED);
+                        break;
                     case 'S':
                         g.setColor(Color.YELLOW);
+                        break;
                     default:
                         displayErrorMessage("Nieznany znak w labiryncie");
                   }
