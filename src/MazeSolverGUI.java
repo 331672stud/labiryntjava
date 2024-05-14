@@ -345,6 +345,8 @@ public class MazeSolverGUI extends JFrame {
         public void setMazeSize(int numRows, int numCols) {
             this.numRows = numRows;
             this.numCols = numCols;
+            if(this.numRows<=20 && this.numCols<=20)
+            this.cellSize=10;
             revalidate();
             repaint();
         }
