@@ -124,6 +124,7 @@ public class MazeSolverGUI extends JFrame {
                     selectStartButton.setEnabled(true);
                     selectEndButton.setEnabled(true);
                     SaveLabirynthButton.setEnabled(true);
+                    displayErrorMessage("Wczytano labirynt");
                 } catch (IOException ex) {
                     displayErrorMessage("Nie udało się wczytać labiryntu z pliku: " + ex.getMessage());
                 }
