@@ -346,10 +346,6 @@ public class MazeSolverGUI extends JFrame {
         errorPanel.repaint();
     }
 
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(MazeSolverGUI::new);
-    }
-
     // wewnetrzna klasa na labirynt
     private class MazePanel extends JPanel {
         private int cellSize = 5; //rozmiar komorki
