@@ -247,28 +247,31 @@ public class MazeSolverGUI extends JFrame {
     private void loadMazeFromBinaryFile(File file) throws IOException {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             //Nagłówek
-            int fileId = readInt(fileInputStream, 32);
-            int escape = readInt(fileInputStream, 8);
-            int columns = readInt(fileInputStream, 16);
-            int lines = readInt(fileInputStream, 16);
-            int entryX = readInt(fileInputStream, 16);
-            int entryY = readInt(fileInputStream, 16);
-            int exitX = readInt(fileInputStream, 16);
-            int exitY = readInt(fileInputStream, 16);
-            readInt(fileInputStream, 96); // Reserved
-            int counter = readInt(fileInputStream, 32);
-            int solutionOffset = readInt(fileInputStream, 32);
-            int separator = readInt(fileInputStream, 8);
-            int wall = readInt(fileInputStream, 8);
-            int path = readInt(fileInputStream, 8);
+            int fileId = readBytesAsInt(fileInputStream, 32/8);
+            int escape = readBytesAsInt(fileInputStream, 8/8);
+            int columns = readBytesAsInt(fileInputStream, 16/8);
+            int lines = readBytesAsInt(fileInputStream, 16/8);
+            int entryX = readBytesAsInt(fileInputStream, 16/8);
+            int entryY = readBytesAsInt(fileInputStream, 16/8);
+            int exitX = readBytesAsInt(fileInputStream, 16/8);
+            int exitY = readBytesAsInt(fileInputStream, 16/8);
+            // Reserved
+            readBytesAsInt(fileInputStream, 32/8);
+            readBytesAsInt(fileInputStream, 32/8);
+            readBytesAsInt(fileInputStream, 32/8);
+            int counter = readBytesAsInt(fileInputStream, 32/8);
+            int solutionOffset = readBytesAsInt(fileInputStream, 32/8);
+            int separator = readBytesAsInt(fileInputStream, 8/8);
+            int wall = readBytesAsInt(fileInputStream, 8/8);
+            int path = readBytesAsInt(fileInputStream, 8/8);
             int numRows = 0;
             int numCols = 0;
             mazeArray = new char[lines][columns];
             // czytanko w pętelce
             while (fileInputStream.available() > 0) {
-                int separatorValue = readInt(fileInputStream, 8);
-                int value = readInt(fileInputStream, 8);
-                int count = readInt(fileInputStream, 8);
+                int separatorValue = readBytesAsInt(fileInputStream, 8/8);
+                int value = readBytesAsInt(fileInputStream, 8/8);
+                int count = readBytesAsInt(fileInputStream, 8/8);
                 for(int i=0;i<=count;i++){
                     if(value==wall){
                         mazeArray[numRows][numCols]='X';
@@ -291,11 +294,20 @@ public class MazeSolverGUI extends JFrame {
         }
     }
 
-    private static int readInt(InputStream inputStream, int numBits) throws IOException {
-        int result = 0;
-        for (int i = 0; i < numBits; i++) {
-            result |= (inputStream.read() & 0x01) << i;
+    private int readBytesAsInt(FileInputStream inputStream, int bytesToRead) throws IOException {
+        byte[] buffer = new byte[bytesToRead];
+        int bytesRead = inputStream.read(buffer);
+
+        if (bytesRead != bytesToRead) {
+            throw new IOException("nie udało się wczytać bajtów");
         }
+
+        int result = 0;
+        for (int i = 0; i < bytesToRead; i++) {
+            // przesunięcie
+            result = (result << 8) | (buffer[i] & 0xFF);
+        }
+
         return result;
     }
 
@@ -311,10 +323,13 @@ public class MazeSolverGUI extends JFrame {
     // wyświetla błędy
     private void displayErrorMessage(String message) {
         // label wiadomości
-        JLabel errorMessageLabel = new JLabel(message);
+        JLabel errorMessageLabel = new JLabel();
+        errorMessageLabel.setText("<html>" + message + "</html>");
+        errorMessageLabel.setMaximumSize(new Dimension(200, Integer.MAX_VALUE));
         errorMessageLabel.setBackground(Color.WHITE);
         errorMessageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         errorMessageLabel.setOpaque(true);
+
         // dodaje panel z wiadomością do listy
         errorMessages.add(errorMessageLabel);
 
