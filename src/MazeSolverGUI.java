@@ -14,16 +14,16 @@ import java.util.List;
 import java.io.*;
 
 public class MazeSolverGUI extends JFrame {
-    private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, SaveLabirynthButton;
+    private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, SaveLabirynthButton;
     private JPanel topPanel, bottomPanel, sidePanel, errorPanel;
     private JScrollPane scrollPane;
     private MazePanel mazePanel;
-    private List<JPanel> errorMessages;
+    private List<JLabel> errorMessages;
     private char[][] mazeArray;
 
     public MazeSolverGUI() {
         setTitle("LabSolver");
-        setSize(960, 540);
+        setSize(1920, 1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
@@ -31,13 +31,15 @@ public class MazeSolverGUI extends JFrame {
         loadTextButton = new JButton("Wczytaj labirynt z pliku tekstowego");
         loadBinaryButton = new JButton("Wczytaj labirynt z pliku binarnego");
         findPathButton = new JButton("Znajdz najkrotsza sciezke");
-        selectStartButton = new JButton("Wybierz punkt poczatkowy i koncowy");
+        selectStartButton = new JButton("Wybierz punkty początkowe");
+        selectEndButton = new JButton("Wybierz punkty końcowe");
         SaveLabirynthButton = new JButton("Zapisz labirynt do pliku");
 
         loadTextButton.setFocusable(false);
         loadBinaryButton.setFocusable(false);
         findPathButton.setFocusable(false);
         selectStartButton.setFocusable(false);
+        selectEndButton.setFocusable(false);
         SaveLabirynthButton.setFocusable(false);
 
         // wczytywanie cos robi
@@ -45,6 +47,7 @@ public class MazeSolverGUI extends JFrame {
         loadBinaryButton.addActionListener(new LoadBinaryListener());
         findPathButton.addActionListener(new FindPathListener());
         selectStartButton.addActionListener(new SelectStartListener());
+        selectEndButton.addActionListener(new SelectEndListener());
         SaveLabirynthButton.addActionListener(new SaveLabirynthListener());
 
         JLabel pole = new JLabel("MENU:");
@@ -63,6 +66,7 @@ public class MazeSolverGUI extends JFrame {
         bottomPanel.setBackground(Color.LIGHT_GRAY);
         bottomPanel.add(findPathButton);
         bottomPanel.add(selectStartButton);
+        bottomPanel.add(selectEndButton);
         bottomPanel.add(SaveLabirynthButton);
 
         // poczatkowy panel
@@ -94,6 +98,7 @@ public class MazeSolverGUI extends JFrame {
         //wygaszenie guzików
         findPathButton.setEnabled(false);
         selectStartButton.setEnabled(false);
+        selectEndButton.setEnabled(false);
         SaveLabirynthButton.setEnabled(false);
 
         errorMessages = new ArrayList<>();
@@ -117,6 +122,7 @@ public class MazeSolverGUI extends JFrame {
                     //Włączamy guziki(beta)
                     findPathButton.setEnabled(true);
                     selectStartButton.setEnabled(true);
+                    selectEndButton.setEnabled(true);
                     SaveLabirynthButton.setEnabled(true);
                 } catch (IOException ex) {
                     displayErrorMessage("Nie udało się wczytać labiryntu z pliku: " + ex.getMessage());
@@ -157,19 +163,56 @@ public class MazeSolverGUI extends JFrame {
         }
     }
 
-    // ActionListener for selecting start point
+    // ActionListener na start
     private class SelectStartListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             // na razie nie ma
-            displayErrorMessage("Niezaimplementowane: start-koniec");
+            displayErrorMessage("Niezaimplementowane: start");
+        }
+    }
+
+    // koniec
+    private class SelectEndListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            // na razie nie ma
+            displayErrorMessage("Niezaimplementowane: koniec");
         }
     }
 
     //Listener do Zapisu
     private class     SaveLabirynthListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //WriteToFile(maze);
-            displayErrorMessage("Niezaimplementowane: start-koniec");
+            WriteToFile();
+        }
+    }
+
+    private void WriteToFile() {
+        JFileChooser zapisChooser = new JFileChooser();
+        zapisChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        zapisChooser.setSelectedFile(new File("output.txt"));
+        zapisChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt"));
+        
+        int result = zapisChooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = zapisChooser.getSelectedFile();
+
+            try {
+                FileWriter fileWriter = new FileWriter(selectedFile);
+                BufferedWriter writer = new BufferedWriter(fileWriter);
+
+                for (int i = 0; i < mazeArray.length; i++) {
+                    for (int j = 0; j < mazeArray[i].length; j++) {
+                        writer.write(mazeArray[i][j]);
+                    }
+                    writer.write(System.lineSeparator()); 
+                }
+
+                writer.close();
+                
+                displayErrorMessage("Zapisano");
+            } catch (IOException e) {
+                displayErrorMessage("Zapis się nie udał: " + e.getMessage());
+            }
         }
     }
 
@@ -267,24 +310,22 @@ public class MazeSolverGUI extends JFrame {
 
     // wyświetla błędy
     private void displayErrorMessage(String message) {
-        // Panel na komunikacje
-        JPanel errorBox = new JPanel();
-        errorBox.setBackground(Color.WHITE);
-        errorBox.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        // label wiadomości
         JLabel errorMessageLabel = new JLabel(message);
-        errorBox.add(errorMessageLabel);
+        errorMessageLabel.setBackground(Color.WHITE);
+        errorMessageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        errorMessageLabel.setOpaque(true);
+        // dodaje panel z wiadomością do listy
+        errorMessages.add(errorMessageLabel);
 
-        // dodaje panel z wiadomością do panelu głównego
-        errorMessages.add(errorBox);
-
-        // Maks 5 wiadomości
-        if (errorMessages.size() > 5) {
+        // Maks 50 wiadomości
+        if (errorMessages.size() > 50) {
             errorPanel.remove(0);
             errorMessages.remove(0);
         }
 
         // odświeżanie panelu
-        errorPanel.add(errorBox);
+        errorPanel.add(errorMessageLabel);
         errorPanel.revalidate();
         errorPanel.repaint();
     }
