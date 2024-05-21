@@ -1,21 +1,16 @@
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.io.*;
+
+import javax.swing.JFileChooser;
 
 public class MazeOperations extends Maze {
 
-    public void ReadTextMaze (File file) throws IOException {
+    protected void ReadTextMaze (File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
         int numRows = 0;
@@ -36,8 +31,6 @@ public class MazeOperations extends Maze {
             row++;
         }
         reader.close();
-        
-        //PRZENIEŚ DO MAZEUILOGIC TAM GDZIE WYWOŁUJESZ TO Z GETSIZEAMI mazePanel.setMazeSize(numRows, numCols);
     }
 
     //Biedabinary wczytywanie
@@ -84,7 +77,6 @@ public class MazeOperations extends Maze {
             }
             ModifyMazeArray(Maze.Start, entryY-1, entryX-1);    
             ModifyMazeArray(Maze.End, exitY-1, exitX-1);
-            // PRZENIEŚ DO MAZEUILOGIC mazePanel.setMazeSize(lines, columns);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -105,5 +97,45 @@ public class MazeOperations extends Maze {
         }
 
         return result;
+    }
+
+    public void FindPathInMazeArray(){
+
+    }
+
+    public void SaveMazeArrayToFile(File selectedFile){
+        /*
+        JFileChooser zapisChooser = new JFileChooser();
+        zapisChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        zapisChooser.setSelectedFile(new File("output.txt"));
+        zapisChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt")); 
+        
+        int result = zapisChooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = zapisChooser.getSelectedFile();
+        }
+
+        TO POWINNO BYĆ NA PRZYCISKU
+        
+        */ 
+        //to jest do tekstowych, możemy dodać switch na binarne
+        try {
+            FileWriter fileWriter = new FileWriter(selectedFile);
+            BufferedWriter writer = new BufferedWriter(fileWriter);
+
+            for (int i = 0; i < getMazeHeight(); i++) {
+                for (int j = 0; j < getMazeWidth(); j++) {
+                    writer.write(getMazeCell(i, j));
+                }
+                writer.write(System.lineSeparator()); 
+            }
+
+            writer.close();
+            
+            displayErrorMessage("Zapisano");
+        } catch (IOException e) {
+            displayErrorMessage("Zapis się nie udał: " + e.getMessage());
+        }
+        
     }
 }
