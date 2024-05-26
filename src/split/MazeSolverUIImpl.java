@@ -60,12 +60,12 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
         selectEndButton.setFocusable(false);
         saveLabirynthButton.setFocusable(false);
 
-        loadTextButton.addActionListener(new LoadTextListener());
-        loadBinaryButton.addActionListener(new LoadBinaryListener());
-        findPathButton.addActionListener(new FindPathListener());
-        selectStartButton.addActionListener(new SelectStartListener());
-        selectEndButton.addActionListener(new SelectEndListener());
-        saveLabirynthButton.addActionListener(new SaveLabirynthListener());
+        loadTextButton.addActionListener(e -> LoadTextListener());
+        loadBinaryButton.addActionListener(e -> LoadBinaryListener());
+        findPathButton.addActionListener(e -> FindPathListener());
+        selectStartButton.addActionListener(e -> SelectStartListener());
+        selectEndButton.addActionListener(e -> SelectEndListener());
+        saveLabirynthButton.addActionListener(e -> SaveLabirynthListener());
 
         JLabel pole = new JLabel("MENU:");
 
@@ -274,115 +274,46 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
         errorPanel.repaint();
     }
 
-    private class MazePanel extends JPanel {
-        private int cellSize = 5;
-        private int numRows = 0;
-        private int numCols = 0;
-
-        public void setMazeSize(int numRows, int numCols) {
-            this.numRows = numRows;
-            this.numCols = numCols;
-            if (this.numRows <= 20 && this.numCols <= 20) {
-                this.cellSize = 10;
-            }
-            revalidate();
-            repaint();
-        }
-
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g);
-            if (mazeArray != null) {
-                int panelWidth = getWidth();
-                int panelHeight = getHeight();
-                int mazeWidth = numCols * cellSize;
-                int mazeHeight = numRows * cellSize;
-
-                int offsetX = (panelWidth - mazeWidth) / 2;
-                int offsetY = (panelHeight - mazeHeight) / 2;
-
-                for (int row = 0; row < numRows; row++) {
-                    for (int col = 0; col < numCols; col++) {
-                        switch (mazeArray[row][col]) {
-                            case 'X':
-                                g.setColor(Color.BLACK);
-                                break;
-                            case ' ':
-                                g.setColor(Color.WHITE);
-                                break;
-                            case 'P':
-                                g.setColor(Color.GREEN);
-                                break;
-                            case 'K':
-                                g.setColor(Color.RED);
-                                break;
-                            case 'S':
-                                g.setColor(Color.YELLOW);
-                                break;
-                            default:
-                                displayErrorMessage("Nieznany znak w labiryncie");
-                        }
-                        int x = offsetX + col * cellSize;
-                        int y = offsetY + row * cellSize;
-                        g.fillRect(x, y, cellSize, cellSize);
-                    }
-                }
-            }
-        }
-
-        @Override
-        public Dimension getPreferredSize() {
-            return new Dimension(numCols * cellSize, numRows * cellSize);
+    private void LoadTextListener (){
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki tekstowe .txt", "txt");
+        fileChooser.setFileFilter(filter);
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            loadTextMaze(selectedFile);
         }
     }
 
-    private class LoadTextListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki tekstowe .txt", "txt");
-            fileChooser.setFileFilter(filter);
-            int returnValue = fileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                loadTextMaze(selectedFile);
-            }
+    private void LoadBinaryListener(){
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki binarne .bin", "bin");
+        fileChooser.setFileFilter(filter);
+        int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            loadBinaryMaze(selectedFile);
         }
     }
+    
 
-    private class LoadBinaryListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki binarne .bin", "bin");
-            fileChooser.setFileFilter(filter);
-            int returnValue = fileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                loadBinaryMaze(selectedFile);
-            }
-        }
+    private void FindPathListener() implements {
+        findPath();
     }
+    
 
-    private class FindPathListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            findPath();
-        }
+    private void SelectStartListener(){
+        selectStart();
     }
+    
 
-    private class SelectStartListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            selectStart();
-        }
+    private void SelectEndListener(){
+        selectEnd();
     }
+    
 
-    private class SelectEndListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            selectEnd();
-        }
+    private void SaveLabirynthListener(){
+        saveMaze();
     }
-
-    private class SaveLabirynthListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            saveMaze();
-        }
-    }
+    
 }

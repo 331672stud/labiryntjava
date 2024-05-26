@@ -10,7 +10,7 @@ import javax.swing.JFileChooser;
 
 public class MazeOperations extends Maze {
 
-    protected void ReadTextMaze (File file) throws IOException {
+    protected void LoadTextMaze (File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
         String line;
         int numRows = 0;
@@ -34,7 +34,7 @@ public class MazeOperations extends Maze {
     }
 
     //Biedabinary wczytywanie
-    public void loadMazeFromBinaryFile(File file) throws IOException {
+    protected void loadBinaryMaze(File file) throws IOException {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             //Nagłówek
             int fileId = readBytesAsInt(fileInputStream, 32/8);
