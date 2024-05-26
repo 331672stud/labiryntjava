@@ -6,14 +6,30 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
+public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
     private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, saveLabirynthButton;
     private JPanel topPanel, bottomPanel, sidePanel, errorPanel;
     private JScrollPane scrollPane;
     private MazePanel mazePanel;
     private List<JLabel> errorMessages;
     private MazeOperations mazeArray;
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof ConsoleInput && arg instanceof String) {
+            String input = (String) arg;
+            // Process the input received from the console
+            processConsoleInput(input);
+        }
+    }
+
+    private void processConsoleInput(String input) {
+        // Implement logic to handle console input
+        System.out.println("Received input from console: " + input);
+    }
 
     public MazeSolverUIImpl() {
         setTitle("LabSolver");
