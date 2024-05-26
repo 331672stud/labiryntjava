@@ -8,40 +8,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
-    private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, SaveLabirynthButton;
+    private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, saveLabirynthButton;
     private JPanel topPanel, bottomPanel, sidePanel, errorPanel;
     private JScrollPane scrollPane;
     private MazePanel mazePanel;
     private List<JLabel> errorMessages;
+    private MazeOperations mazeArray;
+
     public MazeSolverUIImpl() {
         setTitle("LabSolver");
         setSize(1920, 1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
+        initializeUI();
+
+        mazeArray = new MazeOperations(); // Initialize MazeOperations
+
+        setVisible(true);
+    }
+
+    private void initializeUI() {
+        // Initialization of buttons and panels
         loadTextButton = new JButton("Wczytaj labirynt z pliku tekstowego");
         loadBinaryButton = new JButton("Wczytaj labirynt z pliku binarnego");
         findPathButton = new JButton("Znajdz najkrotsza sciezke");
         selectStartButton = new JButton("Wybierz punkty początkowe");
         selectEndButton = new JButton("Wybierz punkty końcowe");
-        SaveLabirynthButton = new JButton("Zapisz labirynt do pliku");
+        saveLabirynthButton = new JButton("Zapisz labirynt do pliku");
 
         loadTextButton.setFocusable(false);
         loadBinaryButton.setFocusable(false);
         findPathButton.setFocusable(false);
         selectStartButton.setFocusable(false);
         selectEndButton.setFocusable(false);
-        SaveLabirynthButton.setFocusable(false);
+        saveLabirynthButton.setFocusable(false);
 
         loadTextButton.addActionListener(new LoadTextListener());
         loadBinaryButton.addActionListener(new LoadBinaryListener());
         findPathButton.addActionListener(new FindPathListener());
         selectStartButton.addActionListener(new SelectStartListener());
         selectEndButton.addActionListener(new SelectEndListener());
-        SaveLabirynthButton.addActionListener(new SaveLabirynthListener());
+        saveLabirynthButton.addActionListener(new SaveLabirynthListener());
 
         JLabel pole = new JLabel("MENU:");
 
+        // Setting up panels and buttons
         topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
         topPanel.setBackground(Color.LIGHT_GRAY);
@@ -55,7 +67,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
         bottomPanel.add(findPathButton);
         bottomPanel.add(selectStartButton);
         bottomPanel.add(selectEndButton);
-        bottomPanel.add(SaveLabirynthButton);
+        bottomPanel.add(saveLabirynthButton);
 
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.add(topPanel, BorderLayout.NORTH);
@@ -83,93 +95,139 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
         findPathButton.setEnabled(false);
         selectStartButton.setEnabled(false);
         selectEndButton.setEnabled(false);
-        SaveLabirynthButton.setEnabled(false);
+        saveLabirynthButton.setEnabled(false);
 
         errorMessages = new ArrayList<>();
-
-        setVisible(true);
     }
 
-    private class LoadTextListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki tekstowe .txt", "txt");
-            fileChooser.setFileFilter(filter);
-            int returnValue = fileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                try {
-                    MazeOperations maze = new MazeOperations();
-                    maze.ReadTextMaze(selectedFile);
-                    mazePanel.setMazeSize(maze.getMazeHeight(),maze.getMazeWidth());
-                    mazePanel.repaint();
-                    adjustScrollPane();
-                    findPathButton.setEnabled(true);
-                    selectStartButton.setEnabled(true);
-                    selectEndButton.setEnabled(true);
-                    SaveLabirynthButton.setEnabled(true);
-                    displayErrorMessage("Wczytano labirynt");
-                } catch (IOException ex) {
-                    displayErrorMessage("Nie udało się wczytać labiryntu z pliku: " + ex.getMessage());
+    @Override
+    public void loadTextMaze(File file) {
+        try {
+            loadMazeFromFile(file);
+            mazePanel.repaint();
+            adjustScrollPane();
+            findPathButton.setEnabled(true);
+            selectStartButton.setEnabled(true);
+            selectEndButton.setEnabled(true);
+            saveLabirynthButton.setEnabled(true);
+            displayErrorMessage("Wczytano labirynt");
+        } catch (IOException ex) {
+            displayErrorMessage("Nie udało się wczytać labiryntu z pliku: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void loadBinaryMaze(File file) {
+        try {
+            loadMazeFromBinaryFile(file);
+            mazePanel.repaint();
+            adjustScrollPane();
+            findPathButton.setEnabled(true);
+            selectStartButton.setEnabled(true);
+            SaveLabirynthButton.setEnabled(true);
+        } catch (IOException ex) {
+            displayErrorMessage("Nie udało się wczytać labiryntu z pliku binarnego: " + ex.getMessage());
+        }
+    }
+
+    @Override
+    public void findPath() {
+        displayErrorMessage("Niezaimplementowane: ścieżka");
+    }
+
+    @Override
+    public void selectStart() {
+        displayErrorMessage("Niezaimplementowane: start");
+    }
+
+    @Override
+    public void selectEnd() {
+        displayErrorMessage("Niezaimplementowane: koniec");
+    }
+
+    @Override
+    public void saveMaze() {
+        writeToFile();
+    }
+
+    private void writeToFile() {
+        JFileChooser zapisChooser = new JFileChooser();
+        zapisChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+        zapisChooser.setSelectedFile(new File("output.txt"));
+        zapisChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt"));
+
+        int result = zapisChooser.showSaveDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = zapisChooser.getSelectedFile();
+
+            try {
+                FileWriter fileWriter = new FileWriter(selectedFile);
+                BufferedWriter writer = new BufferedWriter(fileWriter);
+
+                for (int i = 0; i < mazeArray.length; i++) {
+                    for (int j = 0; j < mazeArray[i].length; j++) {
+                        writer.write(mazeArray[i][j]);
+                    }
+                    writer.write(System.lineSeparator());
                 }
+
+                writer.close();
+
+                displayErrorMessage("Zapisano");
+            } catch (IOException e) {
+                displayErrorMessage("Zapis się nie udał: " + e.getMessage());
             }
         }
     }
 
-    private class LoadBinaryListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser fileChooser = new JFileChooser();
-            FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki binarne .bin", "bin");
-            fileChooser.setFileFilter(filter);
-            int returnValue = fileChooser.showOpenDialog(null);
-            if (returnValue == JFileChooser.APPROVE_OPTION) {
-                File selectedFile = fileChooser.getSelectedFile();
-                try {
-                    MazeOperations maze = new MazeOperations();
-                    maze.loadMazeFromBinaryFile(selectedFile);
-                    mazePanel.setMazeSize(maze.getMazeHeight(),maze.getMazeWidth());
-                    mazePanel.repaint();
-                    adjustScrollPane();
-                    findPathButton.setEnabled(true);
-                    selectStartButton.setEnabled(true);
-                    SaveLabirynthButton.setEnabled(true);
-                } catch (IOException ex) {
-                    displayErrorMessage("Nie udało się wczytać labiryntu z pliku binarnego: " + ex.getMessage());
-                }
+    private void loadMazeFromFile(File file) throws IOException {
+        BufferedReader reader = new BufferedReader(new FileReader(file));
+        String line;
+        int numRows = 0;
+        int numCols = 0;
+        while ((line = reader.readLine()) != null) {
+            numCols = Math.max(numCols, line.length());
+            numRows++;
+        }
+        reader.close();
+
+        mazeArray = new char[numRows][numCols];
+        reader = new BufferedReader(new FileReader(file));
+        int row = 0;
+        while ((line = reader.readLine()) != null) {
+            for (int col = 0; col < line.length(); col++) {
+                mazeArray[row][col] = line.charAt(col);
             }
+            row++;
+        }
+        reader.close();
+
+        mazePanel.setMazeSize(numRows, numCols);
+    }
+
+    private void loadMazeFromBinaryFile(File file) throws IOException {
+        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+            // Parsing binary file
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
-    private class FindPathListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            displayErrorMessage("Niezaimplementowane: ścieżka");
-        }
-    }
+    private int readBytesAsInt(FileInputStream inputStream, int bytesToRead) throws IOException {
+        byte[] buffer = new byte[bytesToRead];
+        int bytesRead = inputStream.read(buffer);
 
-    private class SelectStartListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            displayErrorMessage("Niezaimplementowane: start");
+        if (bytesRead != bytesToRead) {
+            throw new IOException("nie udało się wczytać bajtów");
         }
-    }
 
-    private class SelectEndListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            displayErrorMessage("Niezaimplementowane: koniec");
+        int result = 0;
+        for (int i = 0; i < bytesToRead; i++) {
+            // przesunięcie
+            result = (result << 8) | (buffer[i] & 0xFF);
         }
-    }
 
-    private class SaveLabirynthListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JFileChooser zapisChooser = new JFileChooser();
-            zapisChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-            zapisChooser.setSelectedFile(new File("output.txt"));
-            zapisChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt")); 
-            
-            int result = zapisChooser.showSaveDialog(null);
-            if (result == JFileChooser.APPROVE_OPTION) {
-                maze.SaveMazeArrayToFile(zapisChooser.getSelectedFile());            
-            }
-        }
+        return result;
     }
 
     private void adjustScrollPane() {
@@ -180,8 +238,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
         });
     }
 
-    @Override
-    public void displayErrorMessage(String message) {
+    private void displayErrorMessage(String message) {
         JLabel errorMessageLabel = new JLabel();
         errorMessageLabel.setText("<html>" + message + "</html>");
         errorMessageLabel.setMaximumSize(new Dimension(200, Integer.MAX_VALUE));
@@ -201,22 +258,17 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
         errorPanel.repaint();
     }
 
-    @Override
-    public JFrame getFrame() {
-        return this;
-    }
-
     private class MazePanel extends JPanel {
-        private int cellSize = 5; // Cell size
+        private int cellSize = 5;
         private int numRows = 0;
         private int numCols = 0;
 
         public void setMazeSize(int numRows, int numCols) {
             this.numRows = numRows;
             this.numCols = numCols;
-            if (this.numRows <= 20 && this.numCols <= 20)
+            if (this.numRows <= 20 && this.numCols <= 20) {
                 this.cellSize = 10;
-            else cellSize=5;
+            }
             revalidate();
             repaint();
         }
@@ -224,7 +276,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
         @Override
         protected void paintComponent(Graphics g) {
             super.paintComponent(g);
-            if (maze != null) {
+            if (mazeArray != null) {
                 int panelWidth = getWidth();
                 int panelHeight = getHeight();
                 int mazeWidth = numCols * cellSize;
@@ -235,7 +287,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
 
                 for (int row = 0; row < numRows; row++) {
                     for (int col = 0; col < numCols; col++) {
-                        switch (maze[row][col]) {
+                        switch (mazeArray[row][col]) {
                             case 'X':
                                 g.setColor(Color.BLACK);
                                 break;
@@ -265,6 +317,56 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI {
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(numCols * cellSize, numRows * cellSize);
+        }
+    }
+
+    private class LoadTextListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki tekstowe .txt", "txt");
+            fileChooser.setFileFilter(filter);
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                loadTextMaze(selectedFile);
+            }
+        }
+    }
+
+    private class LoadBinaryListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            JFileChooser fileChooser = new JFileChooser();
+            FileNameExtensionFilter filter = new FileNameExtensionFilter("pliki binarne .bin", "bin");
+            fileChooser.setFileFilter(filter);
+            int returnValue = fileChooser.showOpenDialog(null);
+            if (returnValue == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                loadBinaryMaze(selectedFile);
+            }
+        }
+    }
+
+    private class FindPathListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            findPath();
+        }
+    }
+
+    private class SelectStartListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            selectStart();
+        }
+    }
+
+    private class SelectEndListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            selectEnd();
+        }
+    }
+
+    private class SaveLabirynthListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+            saveMaze();
         }
     }
 }

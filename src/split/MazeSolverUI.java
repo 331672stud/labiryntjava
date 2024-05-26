@@ -1,6 +1,10 @@
-import javax.swing.*;
+import java.io.File;
 
 public interface MazeSolverUI {
-    void displayErrorMessage(String message);
-    JFrame getFrame();
+    void loadTextMaze(File file);
+    void loadBinaryMaze(File file);
+    void findPath();
+    void selectStart();
+    void selectEnd();
+    void saveMaze();
 }
