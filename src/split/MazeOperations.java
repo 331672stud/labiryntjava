@@ -6,8 +6,6 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.swing.JFileChooser;
-
 public class MazeOperations extends Maze {
 
     protected void LoadTextMaze (File file) throws IOException {
@@ -103,21 +101,7 @@ public class MazeOperations extends Maze {
 
     }
 
-    public void SaveMazeArrayToFile(File selectedFile){
-        /*
-        JFileChooser zapisChooser = new JFileChooser();
-        zapisChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        zapisChooser.setSelectedFile(new File("output.txt"));
-        zapisChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt")); 
-        
-        int result = zapisChooser.showSaveDialog(null);
-        if (result == JFileChooser.APPROVE_OPTION) {
-            File selectedFile = zapisChooser.getSelectedFile();
-        }
-
-        TO POWINNO BYĆ NA PRZYCISKU
-        
-        */ 
+    public void SaveMazeArrayToFile(File selectedFile){ 
         //to jest do tekstowych, możemy dodać switch na binarne
         try {
             FileWriter fileWriter = new FileWriter(selectedFile);
@@ -132,9 +116,9 @@ public class MazeOperations extends Maze {
 
             writer.close();
             
-            displayErrorMessage("Zapisano");
+           //notify tu dac displayErrorMessage("Zapisano");
         } catch (IOException e) {
-            displayErrorMessage("Zapis się nie udał: " + e.getMessage());
+          //dacme notify  displayErrorMessage("Zapis się nie udał: " + e.getMessage());
         }
         
     }

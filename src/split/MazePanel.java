@@ -1,19 +1,15 @@
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
-
-import javax.swing.JFileChooser;
 public class MazePanel extends JPanel {
     private int cellSize = 5;
     private int numRows = 0;
     private int numCols = 0;
+    private MazeOperations Maze;
+
+    public MazePanel(MazeOperations MazeOperations){
+        this.Maze=MazeOperations;
+    }
+
 
     public void setMazeSize(int numRows, int numCols) {
         this.numRows = numRows;
@@ -28,7 +24,7 @@ public class MazePanel extends JPanel {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        if (mazeArray != null) {
+        if (Maze.IsMazeInit()) {
             int panelWidth = getWidth();
             int panelHeight = getHeight();
             int mazeWidth = numCols * cellSize;
@@ -39,7 +35,7 @@ public class MazePanel extends JPanel {
 
             for (int row = 0; row < numRows; row++) {
                 for (int col = 0; col < numCols; col++) {
-                    switch (mazeArray[row][col]) {
+                    switch (Maze.getMazeCell(row, col)) {
                         case 'X':
                             g.setColor(Color.BLACK);
                             break;
@@ -56,7 +52,7 @@ public class MazePanel extends JPanel {
                             g.setColor(Color.YELLOW);
                             break;
                         default:
-                            displayErrorMessage("Nieznany znak w labiryncie");
+                            // notify displayErrorMessage("Nieznany znak w labiryncie");
                     }
                     int x = offsetX + col * cellSize;
                     int y = offsetY + row * cellSize;

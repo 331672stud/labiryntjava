@@ -1,35 +1,17 @@
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
-public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
+public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
     private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, saveLabirynthButton;
     private JPanel topPanel, bottomPanel, sidePanel, errorPanel;
     private JScrollPane scrollPane;
     private MazePanel mazePanel;
     private List<JLabel> errorMessages;
     private MazeOperations mazeArray;
-
-    @Override
-    public void update(Observable o, Object arg) {
-        if (o instanceof ConsoleInput && arg instanceof String) {
-            String input = (String) arg;
-            // Process the input received from the console
-            processConsoleInput(input);
-        }
-    }
-
-    private void processConsoleInput(String input) {
-        // Implement logic to handle console input
-        System.out.println("Received input from console: " + input);
-    }
 
     public MazeSolverUIImpl() {
         setTitle("LabSolver");
@@ -89,7 +71,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
         contentPanel.add(topPanel, BorderLayout.NORTH);
         contentPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        mazePanel = new MazePanel();
+        mazePanel = new MazePanel(mazeArray);
         scrollPane = new JScrollPane(mazePanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -119,7 +101,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
     @Override
     public void loadTextMaze(File file) {
         try {
-            loadMazeFromFile(file);
+            mazeArray.LoadTextMaze(file);
             mazePanel.repaint();
             adjustScrollPane();
             findPathButton.setEnabled(true);
@@ -140,7 +122,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
             adjustScrollPane();
             findPathButton.setEnabled(true);
             selectStartButton.setEnabled(true);
-            SaveLabirynthButton.setEnabled(true);
+            saveLabirynthButton.setEnabled(true);
         } catch (IOException ex) {
             displayErrorMessage("Nie udało się wczytać labiryntu z pliku binarnego: " + ex.getMessage());
         }
@@ -170,80 +152,21 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
         JFileChooser zapisChooser = new JFileChooser();
         zapisChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         zapisChooser.setSelectedFile(new File("output.txt"));
-        zapisChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt"));
-
+        zapisChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Text files (*.txt)", "txt")); 
+        
         int result = zapisChooser.showSaveDialog(null);
         if (result == JFileChooser.APPROVE_OPTION) {
             File selectedFile = zapisChooser.getSelectedFile();
-
-            try {
-                FileWriter fileWriter = new FileWriter(selectedFile);
-                BufferedWriter writer = new BufferedWriter(fileWriter);
-
-                for (int i = 0; i < mazeArray.length; i++) {
-                    for (int j = 0; j < mazeArray[i].length; j++) {
-                        writer.write(mazeArray[i][j]);
-                    }
-                    writer.write(System.lineSeparator());
-                }
-
-                writer.close();
-
-                displayErrorMessage("Zapisano");
-            } catch (IOException e) {
-                displayErrorMessage("Zapis się nie udał: " + e.getMessage());
-            }
+            mazeArray.SaveMazeArrayToFile(selectedFile);
         }
-    }
-
-    private void loadMazeFromFile(File file) throws IOException {
-        BufferedReader reader = new BufferedReader(new FileReader(file));
-        String line;
-        int numRows = 0;
-        int numCols = 0;
-        while ((line = reader.readLine()) != null) {
-            numCols = Math.max(numCols, line.length());
-            numRows++;
-        }
-        reader.close();
-
-        mazeArray = new char[numRows][numCols];
-        reader = new BufferedReader(new FileReader(file));
-        int row = 0;
-        while ((line = reader.readLine()) != null) {
-            for (int col = 0; col < line.length(); col++) {
-                mazeArray[row][col] = line.charAt(col);
-            }
-            row++;
-        }
-        reader.close();
-
-        mazePanel.setMazeSize(numRows, numCols);
     }
 
     private void loadMazeFromBinaryFile(File file) throws IOException {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            // Parsing binary file
+            mazeArray.loadBinaryMaze(file);
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    private int readBytesAsInt(FileInputStream inputStream, int bytesToRead) throws IOException {
-        byte[] buffer = new byte[bytesToRead];
-        int bytesRead = inputStream.read(buffer);
-
-        if (bytesRead != bytesToRead) {
-            throw new IOException("nie udało się wczytać bajtów");
-        }
-
-        int result = 0;
-        for (int i = 0; i < bytesToRead; i++) {
-            // przesunięcie
-            result = (result << 8) | (buffer[i] & 0xFF);
-        }
-
-        return result;
     }
 
     private void adjustScrollPane() {
@@ -297,7 +220,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer {
     }
     
 
-    private void FindPathListener() implements {
+    private void FindPathListener(){
         findPath();
     }
     

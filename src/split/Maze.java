@@ -7,6 +7,18 @@ public class Maze {
     protected void InitMazeArray(int height, int width){
         MazeArray = new char[height][width];
     }
+
+    public boolean IsMazeInit() {
+        // Iterate through the array and check if any element is not the default value ('\u0000')
+        for (int i = 0; i < MazeArray.length; i++) {
+            for (int j = 0; j < MazeArray[i].length; j++) {
+                if (MazeArray[i][j] != '\u0000') {
+                    return true; // Array is initialized
+                }
+            }
+        }
+        return false; // Array is not initialized
+    }
     
     protected void ModifyMazeArray(char Symbol, int CurrentHeight, int CurrentWidth){
         MazeArray[CurrentHeight][CurrentWidth]=Symbol;
