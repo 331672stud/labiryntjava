@@ -9,7 +9,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
     private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, saveMazeButton, saveBinaryButton;
     private JPanel topPanel, bottomPanel, sidePanel, errorPanel;
     private JScrollPane scrollPane;
-    private MazePanel mazePanel;
+    private MazeOperations.MazePanel mazePanel;
     private List<JLabel> errorMessages;
     private MazeOperations mazeArray;
 
@@ -71,12 +71,12 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         contentPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         // panel labiryntu
-        mazePanel = new MazePanel(mazeArray);
+        mazePanel = mazeArray.new MazePanel();
         scrollPane = new JScrollPane(mazePanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        contentPanel.add(scrollPane, BorderLayout.CENTER); 
+        contentPanel.add(scrollPane, BorderLayout.CENTER);  
 
         // Boczny Panel
         sidePanel = new JPanel();
@@ -108,6 +108,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
     public void loadTextMaze(File file) {
         try {
             mazeArray.LoadTextMaze(file);
+            mazePanel.setMazeSize(mazeArray.getMazeHeight(), mazeArray.getMazeWidth());
             mazePanel.repaint();
             adjustScrollPane();
             findPathButton.setEnabled(true);
@@ -124,6 +125,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
     public void loadBinaryMaze(File file) {
         try {
             loadMazeFromBinaryFile(file);
+            mazePanel.setMazeSize(mazeArray.getMazeHeight(), mazeArray.getMazeWidth());
             mazePanel.repaint();
             adjustScrollPane();
             findPathButton.setEnabled(true);
