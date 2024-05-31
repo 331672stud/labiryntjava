@@ -15,7 +15,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
 
     public MazeSolverUIImpl() {
         setTitle("LabSolver2");
-        setSize(1920, 1080);
+        setSize(960, 540);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
