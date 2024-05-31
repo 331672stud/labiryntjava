@@ -156,6 +156,7 @@ public class MazeOperations extends Maze {
 
                     // If the neighbor is the end point, stop BFS
                     if (cell == End) {
+                        markShortestPath(visited);
                         return;
                     }
                 }
@@ -164,6 +165,23 @@ public class MazeOperations extends Maze {
 
         // If the end point is not reached, there is no solution
         System.out.println("No solution found.");
+    }
+
+    // Helper method to mark the shortest path
+    private void markShortestPath(boolean[][] visited) {
+        for (int i = 0; i < getMazeHeight(); i++) {
+            for (int j = 0; j < getMazeWidth(); j++) {
+                if (visited[i][j]) {
+                    if (getMazeCell(i, j) != Start && getMazeCell(i, j) != End) {
+                        ModifyMazeArray(Solution, i, j);
+                    }
+                } else {
+                    if (getMazeCell(i, j) == Solution) {
+                        ModifyMazeArray(Path, i, j);
+                    }
+                }
+            }
+        }
     }
 
     public void SaveMazeArrayToFile(File selectedFile){ 
