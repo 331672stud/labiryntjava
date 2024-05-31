@@ -63,7 +63,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         bottomPanel.add(findPathButton);
         bottomPanel.add(selectStartButton);
         bottomPanel.add(selectEndButton);
-        bottomPanel.add(saveLabirynthButton);
+        bottomPanel.add(saveMazeButton);
 
         // poczatkowy panel
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -95,7 +95,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         findPathButton.setEnabled(false);
         selectStartButton.setEnabled(false);
         selectEndButton.setEnabled(false);
-        saveLabirynthButton.setEnabled(false);
+        saveMazeButton.setEnabled(false);
 
         errorMessages = new ArrayList<>();
 
@@ -111,7 +111,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
             findPathButton.setEnabled(true);
             selectStartButton.setEnabled(true);
             selectEndButton.setEnabled(true);
-            saveLabirynthButton.setEnabled(true);
+            saveMazeButton.setEnabled(true);
             displayErrorMessage("Wczytano labirynt");
         } catch (IOException ex) {
             displayErrorMessage("Nie udało się wczytać labiryntu z pliku: " + ex.getMessage());
@@ -126,7 +126,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
             adjustScrollPane();
             findPathButton.setEnabled(true);
             selectStartButton.setEnabled(true);
-            saveLabirynthButton.setEnabled(true);
+            saveMazeButton.setEnabled(true);
         } catch (IOException ex) {
             displayErrorMessage("Nie udało się wczytać labiryntu z pliku binarnego: " + ex.getMessage());
         }
