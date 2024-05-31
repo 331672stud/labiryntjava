@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class MazeOperations extends Maze {
 
@@ -109,9 +107,6 @@ public class MazeOperations extends Maze {
         // Initialize a visited array to keep track of visited cells
         boolean[][] visited = new boolean[getMazeHeight()][getMazeWidth()];
 
-        // Initialize a queue for BFS
-        Queue<int[]> queue = new LinkedList<>();
-
         // Find the starting position
         int startRow = -1, startCol = -1;
         for (int i = 0; i < getMazeHeight(); i++) {
@@ -125,46 +120,35 @@ public class MazeOperations extends Maze {
             if (startRow != -1) break;
         }
 
-        // Add the starting position to the queue
-        queue.offer(new int[]{startRow, startCol});
+        // Perform DFS
+        dfs(startRow, startCol, visited);
 
-        // Perform BFS
-        while (!queue.isEmpty()) {
-            int[] current = queue.poll();
-            int row = current[0];
-            int col = current[1];
+        // Mark the shortest path
+        markShortestPath(visited);
+    }
+    
+    // Depth-First Search (DFS) method
+    private void dfs(int row, int col, boolean[][] visited) {
+        // Mark the current cell as visited
+        visited[row][col] = true;
 
-            // Mark the current cell as visited
-            visited[row][col] = true;
+        // Check neighbors
+        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int[] dir : directions) {
+            int newRow = row + dir[0];
+            int newCol = col + dir[1];
 
-            // Check neighbors
-            int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-            for (int[] dir : directions) {
-                int newRow = row + dir[0];
-                int newCol = col + dir[1];
+            // Check if the neighbor is within bounds and not visited
+            if (newRow >= 0 && newRow < getMazeHeight() && newCol >= 0 && newCol < getMazeWidth()
+                    && !visited[newRow][newCol]) {
+                char cell = getMazeCell(newRow, newCol);
 
-                // Check if the neighbor is within bounds and not visited
-                if (newRow >= 0 && newRow < getMazeHeight() && newCol >= 0 && newCol < getMazeWidth()
-                        && !visited[newRow][newCol]) {
-                    char cell = getMazeCell(newRow, newCol);
-
-                    // If the neighbor is a path, mark it as part of the solution
-                    if (cell == Path) {
-                        ModifyMazeArray(Solution, newRow, newCol);
-                        queue.offer(new int[]{newRow, newCol});
-                    }
-
-                    // If the neighbor is the end point, stop BFS
-                    if (cell == End) {
-                        markShortestPath(visited);
-                        return;
-                    }
+                // If the neighbor is a path, continue DFS
+                if (cell == Path || cell == End) {
+                    dfs(newRow, newCol, visited);
                 }
             }
         }
-
-        // If the end point is not reached, there is no solution
-        System.out.println("No solution found.");
     }
 
     // Helper method to mark the shortest path

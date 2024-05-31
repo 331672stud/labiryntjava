@@ -14,7 +14,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
     private MazeOperations mazeArray;
 
     public MazeSolverUIImpl() {
-        setTitle("LabSolver");
+        setTitle("LabSolver2");
         setSize(1920, 1080);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -76,7 +76,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
+        contentPanel.add(scrollPane, BorderLayout.CENTER); 
 
         // Boczny Panel
         sidePanel = new JPanel();
@@ -100,6 +100,8 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         errorMessages = new ArrayList<>();
 
         setVisible(true);
+        displayErrorMessage("Wczytano GUI");
+
     }
 
     @Override
