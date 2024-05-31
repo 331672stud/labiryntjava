@@ -5,8 +5,11 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.LinkedList;
+
 import javax.swing.JPanel;
 import java.awt.*;
+import java.util.Queue;
 
 public class MazeOperations extends Maze {
 
@@ -100,75 +103,78 @@ public class MazeOperations extends Maze {
     }
 
     public void FindPathInMazeArray(){
-        // Check if the maze is initialized
         if (!IsMazeInit()) {
             System.out.println("Maze is not initialized.");
             return;
         }
 
-        // Initialize a visited array to keep track of visited cells
-        boolean[][] visited = new boolean[getMazeHeight()][getMazeWidth()];
-
-        // Find the starting position
-        int startRow = -1, startCol = -1;
+        // Find start and end positions
+        int startX = -1, startY = -1;
+        int endX = -1, endY = -1;
         for (int i = 0; i < getMazeHeight(); i++) {
             for (int j = 0; j < getMazeWidth(); j++) {
                 if (getMazeCell(i, j) == Start) {
-                    startRow = i;
-                    startCol = j;
-                    break;
-                }
-            }
-            if (startRow != -1) break;
-        }
-
-        // Perform DFS
-        dfs(startRow, startCol, visited);
-
-        // Mark the shortest path
-        markShortestPath(visited);
-    }
-    
-    // Depth-First Search (DFS) method
-    private void dfs(int row, int col, boolean[][] visited) {
-        // Mark the current cell as visited
-        visited[row][col] = true;
-
-        // Check neighbors
-        int[][] directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
-        for (int[] dir : directions) {
-            int newRow = row + dir[0];
-            int newCol = col + dir[1];
-
-            // Check if the neighbor is within bounds and not visited
-            if (newRow >= 0 && newRow < getMazeHeight() && newCol >= 0 && newCol < getMazeWidth()
-                    && !visited[newRow][newCol]) {
-                char cell = getMazeCell(newRow, newCol);
-
-                // If the neighbor is a path, continue DFS
-                if (cell == Path || cell == End) {
-                    dfs(newRow, newCol, visited);
+                    startX = i;
+                    startY = j;
+                } else if (getMazeCell(i, j) == End) {
+                    endX = i;
+                    endY = j;
                 }
             }
         }
-    }
 
-    // Helper method to mark the shortest path
-    private void markShortestPath(boolean[][] visited) {
-        for (int i = 0; i < getMazeHeight(); i++) {
-            for (int j = 0; j < getMazeWidth(); j++) {
-                if (visited[i][j]) {
-                    if (getMazeCell(i, j) != Start && getMazeCell(i, j) != End) {
-                        ModifyMazeArray(Solution, i, j);
-                    }
-                } else {
-                    if (getMazeCell(i, j) == Solution) {
-                        ModifyMazeArray(Path, i, j);
-                    }
+        // If start or end positions are not found, return
+        if (startX == -1 || startY == -1 || endX == -1 || endY == -1) {
+            System.out.println("Start or end position not found.");
+            return;
+        }
+
+        // Perform BFS to find the shortest path
+        boolean[][] visited = new boolean[getMazeHeight()][getMazeWidth()];
+        int[][] parentX = new int[getMazeHeight()][getMazeWidth()];
+        int[][] parentY = new int[getMazeHeight()][getMazeWidth()];
+
+        Queue<Integer> queue = new LinkedList<>();
+        queue.add(startX);
+        queue.add(startY);
+        visited[startX][startY] = true;
+
+        int[] dx = {-1, 0, 1, 0}; // Possible movements: Up, Right, Down, Left
+        int[] dy = {0, 1, 0, -1};
+
+        while (!queue.isEmpty()) {
+            int currentX = queue.poll();
+            int currentY = queue.poll();
+
+            if (currentX == endX && currentY == endY) {
+                // Shortest path found, backtrack to mark the path
+                while (currentX != startX || currentY != startY) {
+                    int nextX = parentX[currentX][currentY];
+                    int nextY = parentY[currentX][currentY];
+                    ModifyMazeArray(Solution, currentX, currentY);
+                    currentX = nextX;
+                    currentY = nextY;
+                }
+                ModifyMazeArray(Solution, startX, startY); // Mark start as part of the solution
+                break;
+            }
+
+            for (int i = 0; i < 4; i++) {
+                int newX = currentX + dx[i];
+                int newY = currentY + dy[i];
+
+                // Check if the new position is valid and not visited yet
+                if (newX >= 0 && newX < getMazeHeight() && newY >= 0 && newY < getMazeWidth() &&
+                        !visited[newX][newY] && getMazeCell(newX, newY) != Wall) {
+                    visited[newX][newY] = true;
+                    parentX[newX][newY] = currentX;
+                    parentY[newX][newY] = currentY;
+                    queue.add(newX);
+                    queue.add(newY);
                 }
             }
         }
-    }
+    }  
 
     public void SaveMazeArrayToFile(File selectedFile){ 
         //to jest do tekstowych, możemy dodać switch na binarne
