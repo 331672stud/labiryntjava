@@ -1,5 +1,7 @@
+import javax.swing.SwingUtilities;
+
 public class Main {
     public static void main(String[] args) {
-        MazeSolverUIImpl ui = new MazeSolverUIImpl();
+        SwingUtilities.invokeLater(MazeSolverUIImpl::new);
     }
 }

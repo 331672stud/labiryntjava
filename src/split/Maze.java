@@ -2,6 +2,7 @@ public class Maze {
     private char[][] MazeArray;
     protected static char Wall='X';
     protected static char Path=' ';
+    protected static char Solution='S';
     protected static char Start='P';
     protected static char End='K';
     protected void InitMazeArray(int height, int width){
