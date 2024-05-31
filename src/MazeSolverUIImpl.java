@@ -128,6 +128,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
             adjustScrollPane();
             findPathButton.setEnabled(true);
             selectStartButton.setEnabled(true);
+            selectEndButton.setEnabled(true);
             saveMazeButton.setEnabled(true);
         } catch (IOException ex) {
             displayErrorMessage("Nie udało się wczytać labiryntu z pliku binarnego: " + ex.getMessage());
