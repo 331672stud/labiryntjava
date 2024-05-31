@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+<<<<<<< HEAD
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -39,6 +40,10 @@ public class MazeOperations extends Maze implements Observable {
             observer.update(input);
         }
     }
+=======
+
+public class MazeOperations extends Maze {
+>>>>>>> a4694f2 (pushhh)
 
     protected void LoadTextMaze (File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -75,7 +80,10 @@ public class MazeOperations extends Maze implements Observable {
             int entryY = readBytesAsInt(fileInputStream, 16/8);
             int exitX = readBytesAsInt(fileInputStream, 16/8);
             int exitY = readBytesAsInt(fileInputStream, 16/8);
+<<<<<<< HEAD
             System.out.println(exitY);
+=======
+>>>>>>> a4694f2 (pushhh)
             // Reserved
             readBytesAsInt(fileInputStream, 32/8);
             readBytesAsInt(fileInputStream, 32/8);
@@ -87,6 +95,7 @@ public class MazeOperations extends Maze implements Observable {
             int path = readBytesAsInt(fileInputStream, 8/8);
             int numRows = 0;
             int numCols = 0;
+<<<<<<< HEAD
             columns*=2;
             columns+=1;
             lines*=2;
@@ -100,11 +109,22 @@ public class MazeOperations extends Maze implements Observable {
     
                 for (int i = 0; i <= count; i++) { //pętla na przewidziane znaki
                     if (value == wall) {
+=======
+            InitMazeArray(numRows, numCols);
+            // czytanko w pętelce
+            while (fileInputStream.available() > 0) {
+                int separatorValue = readBytesAsInt(fileInputStream, 8/8);
+                int value = readBytesAsInt(fileInputStream, 8/8);
+                int count = readBytesAsInt(fileInputStream, 8/8);
+                for(int i=0;i<=count;i++){
+                    if(value==wall){
+>>>>>>> a4694f2 (pushhh)
                         ModifyMazeArray(Maze.Wall, numRows, numCols);
                     } else {
                         ModifyMazeArray(Maze.Path, numRows, numCols);
                     }
                     numCols++;
+<<<<<<< HEAD
                     if (numCols == columns) {
                         numRows++;
                         numCols = 0;
@@ -114,6 +134,16 @@ public class MazeOperations extends Maze implements Observable {
             }
             ModifyMazeArray(Maze.Start, entryY - 1, entryX - 1);
             ModifyMazeArray(Maze.End, exitY - 1, exitX - 1);
+=======
+                    if(numCols==columns){
+                        numRows++;
+                        numCols=0;
+                    }
+                }
+            }
+            ModifyMazeArray(Maze.Start, entryY-1, entryX-1);    
+            ModifyMazeArray(Maze.End, exitY-1, exitX-1);
+>>>>>>> a4694f2 (pushhh)
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -137,6 +167,7 @@ public class MazeOperations extends Maze implements Observable {
     }
 
     public void FindPathInMazeArray(){
+<<<<<<< HEAD
         if (!IsMazeInit()) {
             System.out.println("Nie udalo sie zainicjowac labiryntu");
             return;
@@ -255,6 +286,13 @@ public class MazeOperations extends Maze implements Observable {
 
 
     public void SaveMazeArrayToFile(File selectedFile){ 
+=======
+
+    }
+
+    public void SaveMazeArrayToFile(File selectedFile){ 
+        //to jest do tekstowych, możemy dodać switch na binarne
+>>>>>>> a4694f2 (pushhh)
         try {
             FileWriter fileWriter = new FileWriter(selectedFile);
             BufferedWriter writer = new BufferedWriter(fileWriter);
@@ -268,6 +306,7 @@ public class MazeOperations extends Maze implements Observable {
 
             writer.close();
             
+<<<<<<< HEAD
            notifyObservers("dispSUCC");
         } catch (IOException e) {
           notifyObservers("dispF");
@@ -388,3 +427,12 @@ public class MazeOperations extends Maze implements Observable {
     }
     }
 }
+=======
+           //notify tu dac displayErrorMessage("Zapisano");
+        } catch (IOException e) {
+          //dacme notify  displayErrorMessage("Zapis się nie udał: " + e.getMessage());
+        }
+        
+    }
+}
+>>>>>>> a4694f2 (pushhh)
