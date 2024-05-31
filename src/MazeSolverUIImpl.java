@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
-    private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, saveLabirynthButton, saveBinaryButton;
+    private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, saveMazeButton, saveBinaryButton;
     private JPanel topPanel, bottomPanel, sidePanel, errorPanel;
     private JScrollPane scrollPane;
     private MazePanel mazePanel;
@@ -27,7 +27,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         findPathButton = new JButton("Znajdz najkrotsza sciezke");
         selectStartButton = new JButton("Wybierz punkty początkowe");
         selectEndButton = new JButton("Wybierz punkty końcowe");
-        saveLabirynthButton = new JButton("Zapisz labirynt do pliku");
+        saveMazeButton = new JButton("Zapisz labirynt do pliku");
         saveBinaryButton = new JButton("Zapisz w formacie binarnym");
 
         loadTextButton.setFocusable(false);
@@ -35,7 +35,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         findPathButton.setFocusable(false);
         selectStartButton.setFocusable(false);
         selectEndButton.setFocusable(false);
-        saveLabirynthButton.setFocusable(false);
+        saveMazeButton.setFocusable(false);
         saveBinaryButton.setFocusable(false);
 
         loadTextButton.addActionListener(e -> LoadTextListener());
@@ -43,7 +43,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         findPathButton.addActionListener(e -> FindPathListener());
         selectStartButton.addActionListener(e -> SelectStartListener());
         selectEndButton.addActionListener(e -> SelectEndListener());
-        saveLabirynthButton.addActionListener(e -> SaveLabirynthListener());
+        saveMazeButton.addActionListener(e -> SaveLabirynthListener());
         saveBinaryButton.addActionListener(e -> saveBinaryListener());
 
         JLabel pole = new JLabel("MENU:");
@@ -63,7 +63,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         bottomPanel.add(findPathButton);
         bottomPanel.add(selectStartButton);
         bottomPanel.add(selectEndButton);
-        bottomPanel.add(saveLabirynthButton);
+        bottomPanel.add(saveMazeButton);
 
         // poczatkowy panel
         JPanel contentPanel = new JPanel(new BorderLayout());
@@ -95,7 +95,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         findPathButton.setEnabled(false);
         selectStartButton.setEnabled(false);
         selectEndButton.setEnabled(false);
-        saveLabirynthButton.setEnabled(false);
+        saveMazeButton.setEnabled(false);
 
         errorMessages = new ArrayList<>();
 
@@ -113,7 +113,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
             findPathButton.setEnabled(true);
             selectStartButton.setEnabled(true);
             selectEndButton.setEnabled(true);
-            saveLabirynthButton.setEnabled(true);
+            saveMazeButton.setEnabled(true);
             displayErrorMessage("Wczytano labirynt");
         } catch (IOException ex) {
             displayErrorMessage("Nie udało się wczytać labiryntu z pliku: " + ex.getMessage());
@@ -128,7 +128,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
             adjustScrollPane();
             findPathButton.setEnabled(true);
             selectStartButton.setEnabled(true);
-            saveLabirynthButton.setEnabled(true);
+            saveMazeButton.setEnabled(true);
         } catch (IOException ex) {
             displayErrorMessage("Nie udało się wczytać labiryntu z pliku binarnego: " + ex.getMessage());
         }
