@@ -247,6 +247,7 @@ public class MazeOperations extends Maze {
         
     }
     public class MazePanel extends JPanel implements MouseListener {
+    
     private int cellSize = 5;
     private int numRows = 0;
     private int numCols = 0;
