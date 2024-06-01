@@ -25,8 +25,8 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         loadTextButton = new JButton("Wczytaj labirynt z pliku tekstowego");
         loadBinaryButton = new JButton("Wczytaj labirynt z pliku binarnego");
         findPathButton = new JButton("Znajdz najkrotsza sciezke");
-        selectStartButton = new JButton("Wybierz punkty początkowe");
-        selectEndButton = new JButton("Wybierz punkty końcowe");
+        selectStartButton = new JButton("Wybierz punkt początkowy");
+        selectEndButton = new JButton("Wybierz punkt końcowy");
         saveMazeButton = new JButton("Zapisz labirynt do pliku");
         saveBinaryButton = new JButton("Zapisz w formacie binarnym");
 
@@ -71,7 +71,8 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         contentPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         // panel labiryntu
-        mazePanel = mazeArray.new MazePanel();
+        mazePanel = mazeArray.new MazePanel(mazeArray);
+        mazePanel.addMouseListener(mazePanel);
         scrollPane = new JScrollPane(mazePanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -146,12 +147,14 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
 
     @Override
     public void selectStart() {
-        displayErrorMessage("Niezaimplementowane: start");
+        mazeArray.choosingStart = true;
+        mazeArray.choosingEnd = false;
     }
 
     @Override
     public void selectEnd() {
-        displayErrorMessage("Niezaimplementowane: koniec");
+        mazeArray.choosingStart = false;
+        mazeArray.choosingEnd = true;
     }
 
     @Override

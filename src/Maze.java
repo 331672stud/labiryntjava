@@ -11,9 +11,9 @@ public class Maze {
 
     public boolean IsMazeInit() {
         if (MazeArray!= null) {
-            return true; // Array is initialized
+            return true;
         }
-        return false; // Array is not initialized
+        return false;
     }
     
     protected void ModifyMazeArray(char Symbol, int CurrentHeight, int CurrentWidth){

@@ -9,9 +9,14 @@ import java.util.LinkedList;
 
 import javax.swing.JPanel;
 import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Queue;
 
 public class MazeOperations extends Maze {
+
+    public boolean choosingStart;
+    public boolean choosingEnd;
 
     protected void LoadTextMaze (File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -104,11 +109,11 @@ public class MazeOperations extends Maze {
 
     public void FindPathInMazeArray(){
         if (!IsMazeInit()) {
-            System.out.println("Maze is not initialized.");
+            System.out.println("Nie udalo sie zainicjowac labiryntu");
             return;
         }
 
-        // Find start and end positions
+        // Szukanie pozycji start i koniec
         int startX = -1, startY = -1;
         int endX = -1, endY = -1;
         for (int i = 0; i < getMazeHeight(); i++) {
@@ -123,13 +128,12 @@ public class MazeOperations extends Maze {
             }
         }
 
-        // If start or end positions are not found, return
         if (startX == -1 || startY == -1 || endX == -1 || endY == -1) {
-            System.out.println("Start or end position not found.");
+            System.out.println("Nie znaleziono pozycji startu i konca");
             return;
         }
 
-        // Perform BFS to find the shortest path
+        // BFS
         boolean[][] visited = new boolean[getMazeHeight()][getMazeWidth()];
         int[][] parentX = new int[getMazeHeight()][getMazeWidth()];
         int[][] parentY = new int[getMazeHeight()][getMazeWidth()];
@@ -139,7 +143,7 @@ public class MazeOperations extends Maze {
         queue.add(startY);
         visited[startX][startY] = true;
 
-        int[] dx = {-1, 0, 1, 0}; // Possible movements: Up, Right, Down, Left
+        int[] dx = {-1, 0, 1, 0}; // mozliwe ruchy tylko: gora, dol, prawo, lewo
         int[] dy = {0, 1, 0, -1};
 
         while (!queue.isEmpty()) {
@@ -147,7 +151,7 @@ public class MazeOperations extends Maze {
             int currentY = queue.poll();
 
             if (currentX == endX && currentY == endY) {
-                // Shortest path found, backtrack to mark the path
+                // znaleziono najkrotsza sciezke
                 while (currentX != startX || currentY != startY) {
                     int nextX = parentX[currentX][currentY];
                     int nextY = parentY[currentX][currentY];
@@ -155,7 +159,7 @@ public class MazeOperations extends Maze {
                     currentX = nextX;
                     currentY = nextY;
                 }
-                ModifyMazeArray(Solution, startX, startY); // Mark start as part of the solution
+                ModifyMazeArray(Solution, startX, startY);
                 break;
             }
 
@@ -163,7 +167,6 @@ public class MazeOperations extends Maze {
                 int newX = currentX + dx[i];
                 int newY = currentY + dy[i];
 
-                // Check if the new position is valid and not visited yet
                 if (newX >= 0 && newX < getMazeHeight() && newY >= 0 && newY < getMazeWidth() &&
                         !visited[newX][newY] && getMazeCell(newX, newY) != Wall) {
                     visited[newX][newY] = true;
@@ -174,7 +177,53 @@ public class MazeOperations extends Maze {
                 }
             }
         }
-    }  
+    }
+
+    private int getStartX(){
+        int startX = -1;
+        for (int i = 0; i < getMazeHeight(); i++) {
+            for (int j = 0; j < getMazeWidth(); j++) {
+                if (getMazeCell(i, j) == Start) {
+                    startX = i;
+                }
+            }
+        }
+        return startX;
+    }
+    private int getStartY(){
+        int startY = -1;
+        for (int i = 0; i < getMazeHeight(); i++) {
+            for (int j = 0; j < getMazeWidth(); j++) {
+                if (getMazeCell(i, j) == Start) {
+                    startY = j;
+                }
+            }
+        }
+        return startY;
+    }
+    private int getEndX(){
+        int endX = -1;
+        for (int i = 0; i < getMazeHeight(); i++) {
+            for (int j = 0; j < getMazeWidth(); j++) {
+                if (getMazeCell(i, j) == End) {
+                    endX = i;
+                }
+            }
+        }
+        return endX;
+    }
+    private int getEndY(){
+        int endY = -1;
+        for (int i = 0; i < getMazeHeight(); i++) {
+            for (int j = 0; j < getMazeWidth(); j++) {
+                if (getMazeCell(i, j) == End) {
+                    endY = j;
+                }
+            }
+        }
+        return endY;
+    }
+
 
     public void SaveMazeArrayToFile(File selectedFile){ 
         //to jest do tekstowych, możemy dodać switch na binarne
@@ -197,10 +246,17 @@ public class MazeOperations extends Maze {
         }
         
     }
-    public class MazePanel extends JPanel {
+    public class MazePanel extends JPanel implements MouseListener {
     private int cellSize = 5;
     private int numRows = 0;
     private int numCols = 0;
+    
+    private MazeOperations mazeArray; // Add a field to store the MazeOperations object
+
+    // Add a constructor that accepts a MazeOperations object
+    public MazePanel(MazeOperations mazeArray) {
+        this.mazeArray = mazeArray;
+    }
 
     public void setMazeSize(int numRows, int numCols) {
         this.numRows = numRows;
@@ -257,5 +313,46 @@ public class MazeOperations extends Maze {
     public Dimension getPreferredSize() {
         return new Dimension(numCols * cellSize, numRows * cellSize);
     }
-}
+
+    public void mouseClicked(MouseEvent e){
+        int panelWidth = getWidth();
+        int panelHeight = getHeight();
+        int mazeWidth = numCols * cellSize;
+        int mazeHeight = numRows * cellSize;
+        int offsetX = (panelWidth - mazeWidth) / 2;
+        int offsetY = (panelHeight - mazeHeight) / 2;
+
+        int mouseX = e.getX();
+        int mouseY = e.getY();
+
+        int mazeX = (mouseX - offsetX) / cellSize;
+        int mazeY = (mouseY - offsetY) / cellSize;
+
+        if (mazeX >= 0 && mazeX < numCols && mazeY >= 0 && mazeY < numRows) {
+            if (choosingStart) {
+                choosingStart = false;
+                int oldStartX = getStartX();
+                int oldStartY = getStartY();
+                ModifyMazeArray(Path, oldStartY, oldStartX);
+                ModifyMazeArray(Start, mazeY, mazeX);
+                repaint();
+            } else if (choosingEnd) {
+                choosingEnd = false;
+                int oldEndX = getEndX();
+                int oldEndY = getEndY();
+                ModifyMazeArray(Path, oldEndY, oldEndX);
+                ModifyMazeArray(End, mazeY, mazeX);
+                repaint();
+            }
+        }
+    }
+    public void mousePressed(MouseEvent e) {
+    }
+    public void mouseReleased(MouseEvent e) {
+    }
+    public void mouseEntered(MouseEvent e) {
+    }
+    public void mouseExited(MouseEvent e) {
+    }
+    }
 }
