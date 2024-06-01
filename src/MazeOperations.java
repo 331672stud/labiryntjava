@@ -251,13 +251,6 @@ public class MazeOperations extends Maze {
     private int numRows = 0;
     private int numCols = 0;
     
-    private MazeOperations mazeArray; // Add a field to store the MazeOperations object
-
-    // Add a constructor that accepts a MazeOperations object
-    public MazePanel(MazeOperations mazeArray) {
-        this.mazeArray = mazeArray;
-    }
-
     public void setMazeSize(int numRows, int numCols) {
         this.numRows = numRows;
         this.numCols = numCols;
@@ -333,14 +326,14 @@ public class MazeOperations extends Maze {
                 choosingStart = false;
                 int oldStartX = getStartX();
                 int oldStartY = getStartY();
-                ModifyMazeArray(Path, oldStartY, oldStartX);
+                ModifyMazeArray(Wall, oldStartX, oldStartY);
                 ModifyMazeArray(Start, mazeY, mazeX);
                 repaint();
             } else if (choosingEnd) {
                 choosingEnd = false;
                 int oldEndX = getEndX();
                 int oldEndY = getEndY();
-                ModifyMazeArray(Path, oldEndY, oldEndX);
+                ModifyMazeArray(Wall, oldEndX, oldEndY);
                 ModifyMazeArray(End, mazeY, mazeX);
                 repaint();
             }

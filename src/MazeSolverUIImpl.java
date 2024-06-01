@@ -71,7 +71,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         contentPanel.add(bottomPanel, BorderLayout.SOUTH);
 
         // panel labiryntu
-        mazePanel = mazeArray.new MazePanel(mazeArray);
+        mazePanel = mazeArray.new MazePanel();
         mazePanel.addMouseListener(mazePanel);
         scrollPane = new JScrollPane(mazePanel);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);

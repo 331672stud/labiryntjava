@@ -5,6 +5,7 @@ public class Maze {
     protected static char Solution='S';
     protected static char Start='P';
     protected static char End='K';
+    
     protected void InitMazeArray(int height, int width){
         MazeArray = new char[height][width];
     }
