@@ -5,7 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JPanel;
 import java.awt.*;
@@ -13,10 +15,28 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.Queue;
 
-public class MazeOperations extends Maze {
+public class MazeOperations extends Maze implements Observable {
 
     public boolean choosingStart;
     public boolean choosingEnd;
+    private List<Observer> observers = new ArrayList<>();
+
+    @Override
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers(String input) {
+        for (Observer observer : observers) {
+            observer.update(input);
+        }
+    }
 
     protected void LoadTextMaze (File file) throws IOException {
         BufferedReader reader = new BufferedReader(new FileReader(file));
@@ -76,7 +96,7 @@ public class MazeOperations extends Maze {
                 int value = readBytesAsInt(fileInputStream, 8 / 8);
                 int count = readBytesAsInt(fileInputStream, 8 / 8);
     
-                for (int i = 0; i <= count; i++) { // Loop until count is reached
+                for (int i = 0; i <= count; i++) { //pętla na przewidziane znaki
                     if (value == wall) {
                         ModifyMazeArray(Maze.Wall, numRows, numCols);
                     } else {
@@ -233,7 +253,6 @@ public class MazeOperations extends Maze {
 
 
     public void SaveMazeArrayToFile(File selectedFile){ 
-        //to jest do tekstowych, możemy dodać switch na binarne
         try {
             FileWriter fileWriter = new FileWriter(selectedFile);
             BufferedWriter writer = new BufferedWriter(fileWriter);
@@ -247,9 +266,9 @@ public class MazeOperations extends Maze {
 
             writer.close();
             
-           //notify tu dac displayErrorMessage("Zapisano");
+           notifyObservers("dispSUCC");
         } catch (IOException e) {
-          //dacme notify  displayErrorMessage("Zapis się nie udał: " + e.getMessage());
+          notifyObservers("dispF");
         }
         
     }
@@ -300,7 +319,7 @@ public class MazeOperations extends Maze {
                             g.setColor(Color.YELLOW);
                             break;
                         default:
-                            // notify displayErrorMessage("Nieznany znak w labiryncie");
+                            notifyObservers("dispUn");
                     }
                     int x = offsetX + col * cellSize;
                     int y = offsetY + row * cellSize;

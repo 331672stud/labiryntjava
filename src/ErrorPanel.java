@@ -10,22 +10,20 @@ public class ErrorPanel extends JPanel {
         errorMessages = new LinkedList<>();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setPreferredSize(new Dimension(200, getHeight()));
-        setBackground(Color.GRAY); // Set background color for the whole panel
+        setBackground(Color.GRAY); 
         setBorder(BorderFactory.createLineBorder(Color.BLACK, 1));
     }
 
     public void addErrorMessage(String message) {
         errorMessages.addFirst(message);
 
-        // Limit the number of messages to MAX_MESSAGES
         if (errorMessages.size() > MAX_MESSAGES) {
             removeErrorMessageLabel();
             errorMessages.removeLast();
         }
 
-        addErrorMessageLabel(message); // Add the newest message label
+        addErrorMessageLabel(message); 
 
-        // Refresh the UI
         revalidate();
         repaint();
     }
@@ -34,8 +32,8 @@ public class ErrorPanel extends JPanel {
         JLabel errorMessageLabel = new JLabel(message);
         errorMessageLabel.setMaximumSize(new Dimension(Integer.MAX_VALUE, errorMessageLabel.getPreferredSize().height));
         errorMessageLabel.setBackground(Color.WHITE);
-        errorMessageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); // Set black border
-        errorMessageLabel.setForeground(Color.BLACK); // Set text color to black
+        errorMessageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK)); 
+        errorMessageLabel.setForeground(Color.BLACK); 
         errorMessageLabel.setOpaque(true);
         add(errorMessageLabel);
     }
@@ -43,7 +41,7 @@ public class ErrorPanel extends JPanel {
     private void removeErrorMessageLabel() {
         Component[] components = getComponents();
         if (components.length > 0) {
-            remove(components[0]); // Remove the oldest message label
+            remove(components[0]); 
         }
     }
 }

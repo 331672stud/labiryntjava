@@ -19,7 +19,8 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        mazeArray = new MazeOperations(); 
+        mazeArray = new MazeOperations();
+        mazeArray.addObserver(this); 
 
         // Inicjalizacja guzikow
         loadTextButton = new JButton("Wczytaj labirynt z pliku tekstowego");
@@ -265,8 +266,17 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer{
             case "savelabirynth":
                 SaveLabirynthListener();
                 break;
-                case "close":
+            case "close":
                 closeUI();
+                break;
+            case "dispSUCC":
+            displayErrorMessage("Udało się zapisać w pliku");
+                break;
+            case "dispF":
+            displayErrorMessage("Nie udało się zapisać w pliku");
+                break;
+            case "dispUn":
+            displayErrorMessage("nieznany znak w labiryncie");
                 break;
             default:
                 displayErrorMessage("Nieznana komenda, użyj: loadtext, loadbinary, findpath, selectstart, selectend, savelabirynth, close");
