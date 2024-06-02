@@ -46,19 +46,12 @@ public class MazeOperations extends Maze {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             //Nagłówek
             int fileId = readBytesAsInt(fileInputStream, 32/8);
-            System.out.println(fileId);
             int escape = readBytesAsInt(fileInputStream, 8/8);
-            System.out.println(escape);
             int columns = readBytesAsInt(fileInputStream, 16/8);
-            System.out.println(columns);
             int lines = readBytesAsInt(fileInputStream, 16/8);
-            System.out.println(lines);
             int entryX = readBytesAsInt(fileInputStream, 16/8);
-            System.out.println(entryX);
             int entryY = readBytesAsInt(fileInputStream, 16/8);
-            System.out.println(entryY);
             int exitX = readBytesAsInt(fileInputStream, 16/8);
-            System.out.println(exitX);
             int exitY = readBytesAsInt(fileInputStream, 16/8);
             System.out.println(exitY);
             // Reserved
@@ -66,15 +59,10 @@ public class MazeOperations extends Maze {
             readBytesAsInt(fileInputStream, 32/8);
             readBytesAsInt(fileInputStream, 32/8);
             int counter = readBytesAsInt(fileInputStream, 32/8);
-            System.out.println(counter);
             int solutionOffset = readBytesAsInt(fileInputStream, 32/8);
-            System.out.println(solutionOffset);
             int separator = readBytesAsInt(fileInputStream, 8/8);
-            System.out.println(separator);
             int wall = readBytesAsInt(fileInputStream, 8/8);
-            System.out.println(wall);
             int path = readBytesAsInt(fileInputStream, 8/8);
-            System.out.println(path);
             int numRows = 0;
             int numCols = 0;
             columns*=2;

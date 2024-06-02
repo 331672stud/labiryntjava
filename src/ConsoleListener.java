@@ -10,7 +10,7 @@ public class ConsoleListener implements Runnable, Observable {
         this.ui = ui;
     }
 
-    // Observable methods
+    //metody Observable
     @Override
     public void addObserver(Observer observer) {
         observers.add(observer);
