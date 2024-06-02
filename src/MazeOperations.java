@@ -324,19 +324,19 @@ public class MazeOperations extends Maze {
 
         if (mazeX >= 0 && mazeX < numCols && mazeY >= 0 && mazeY < numRows) {
             if (choosingStart) {
-                choosingStart = false;
                 int oldStartX = getStartX();
                 int oldStartY = getStartY();
                 ModifyMazeArray(Wall, oldStartX, oldStartY);
                 ModifyMazeArray(Start, mazeY, mazeX);
                 repaint();
+                choosingStart = false;
             } else if (choosingEnd) {
-                choosingEnd = false;
                 int oldEndX = getEndX();
                 int oldEndY = getEndY();
                 ModifyMazeArray(Wall, oldEndX, oldEndY);
                 ModifyMazeArray(End, mazeY, mazeX);
                 repaint();
+                choosingEnd = false;
             }
         }
     }

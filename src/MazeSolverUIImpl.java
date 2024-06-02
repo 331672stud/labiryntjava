@@ -149,12 +149,14 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
     public void selectStart() {
         mazeArray.choosingStart = true;
         mazeArray.choosingEnd = false;
+        displayErrorMessage("Wybieranie punktu początkowego");
     }
 
     @Override
     public void selectEnd() {
         mazeArray.choosingStart = false;
         mazeArray.choosingEnd = true;
+        displayErrorMessage("Wybieranie punktu końcowego");
     }
 
     @Override
