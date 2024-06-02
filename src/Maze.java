@@ -18,7 +18,15 @@ public class Maze {
     }
     
     protected void ModifyMazeArray(char Symbol, int CurrentHeight, int CurrentWidth){
-        MazeArray[CurrentHeight][CurrentWidth]=Symbol;
+        if (isValidPosition(CurrentHeight, CurrentWidth)) {
+            MazeArray[CurrentHeight][CurrentWidth] = Symbol;
+        } else {
+            System.out.println("Error: Out of Bounds");
+        }
+    }
+    
+    public boolean isValidPosition(int row, int col) {
+        return row >= 0 && row < MazeArray.length && col >= 0 && col < MazeArray[0].length;
     }
     
     public int getMazeHeight(){

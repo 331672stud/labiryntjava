@@ -46,45 +46,64 @@ public class MazeOperations extends Maze {
         try (FileInputStream fileInputStream = new FileInputStream(file)) {
             //Nagłówek
             int fileId = readBytesAsInt(fileInputStream, 32/8);
+            System.out.println(fileId);
             int escape = readBytesAsInt(fileInputStream, 8/8);
+            System.out.println(escape);
             int columns = readBytesAsInt(fileInputStream, 16/8);
+            System.out.println(columns);
             int lines = readBytesAsInt(fileInputStream, 16/8);
+            System.out.println(lines);
             int entryX = readBytesAsInt(fileInputStream, 16/8);
+            System.out.println(entryX);
             int entryY = readBytesAsInt(fileInputStream, 16/8);
+            System.out.println(entryY);
             int exitX = readBytesAsInt(fileInputStream, 16/8);
+            System.out.println(exitX);
             int exitY = readBytesAsInt(fileInputStream, 16/8);
+            System.out.println(exitY);
             // Reserved
             readBytesAsInt(fileInputStream, 32/8);
             readBytesAsInt(fileInputStream, 32/8);
             readBytesAsInt(fileInputStream, 32/8);
             int counter = readBytesAsInt(fileInputStream, 32/8);
+            System.out.println(counter);
             int solutionOffset = readBytesAsInt(fileInputStream, 32/8);
+            System.out.println(solutionOffset);
             int separator = readBytesAsInt(fileInputStream, 8/8);
+            System.out.println(separator);
             int wall = readBytesAsInt(fileInputStream, 8/8);
+            System.out.println(wall);
             int path = readBytesAsInt(fileInputStream, 8/8);
+            System.out.println(path);
             int numRows = 0;
             int numCols = 0;
-            InitMazeArray(numRows, numCols);
-            // czytanko w pętelce
-            while (fileInputStream.available() > 0) {
-                int separatorValue = readBytesAsInt(fileInputStream, 8/8);
-                int value = readBytesAsInt(fileInputStream, 8/8);
-                int count = readBytesAsInt(fileInputStream, 8/8);
-                for(int i=0;i<=count;i++){
-                    if(value==wall){
+            columns*=2;
+            columns+=1;
+            lines*=2;
+            lines+=1;
+            InitMazeArray(lines, columns);
+            //czytanie
+            while (numRows < lines && fileInputStream.available() > 0) {
+                int separatorValue = readBytesAsInt(fileInputStream, 8 / 8);
+                int value = readBytesAsInt(fileInputStream, 8 / 8);
+                int count = readBytesAsInt(fileInputStream, 8 / 8);
+    
+                for (int i = 0; i <= count; i++) { // Loop until count is reached
+                    if (value == wall) {
                         ModifyMazeArray(Maze.Wall, numRows, numCols);
                     } else {
                         ModifyMazeArray(Maze.Path, numRows, numCols);
                     }
                     numCols++;
-                    if(numCols==columns){
+                    if (numCols == columns) {
                         numRows++;
-                        numCols=0;
+                        numCols = 0;
                     }
+                    if (numRows == lines) break;
                 }
             }
-            ModifyMazeArray(Maze.Start, entryY-1, entryX-1);    
-            ModifyMazeArray(Maze.End, exitY-1, exitX-1);
+            ModifyMazeArray(Maze.Start, entryY - 1, entryX - 1);
+            ModifyMazeArray(Maze.End, exitY - 1, exitX - 1);
         } catch (IOException e) {
             e.printStackTrace();
         }
