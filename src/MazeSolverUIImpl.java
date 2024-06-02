@@ -2,19 +2,19 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
 
-public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
+
+public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer{
     private JButton loadTextButton, loadBinaryButton, findPathButton, selectStartButton, selectEndButton, saveMazeButton, saveBinaryButton;
-    private JPanel topPanel, bottomPanel, sidePanel, errorPanel;
+    private JPanel topPanel, bottomPanel;
     private JScrollPane scrollPane;
     private MazeOperations.MazePanel mazePanel;
-    private List<JLabel> errorMessages;
+    private ErrorPanel errorPanel;
     private MazeOperations mazeArray;
+    private volatile boolean running = true; // Czy UI działa
 
     public MazeSolverUIImpl() {
-        setTitle("LabSolver2");
+        setTitle("LabSolver");
         setSize(960, 540);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -78,19 +78,12 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
         contentPanel.add(scrollPane, BorderLayout.CENTER);  
-
-        // Boczny Panel
-        sidePanel = new JPanel();
-        sidePanel.setLayout(new BorderLayout());
-        errorPanel = new JPanel();
-        errorPanel.setLayout(new BoxLayout(errorPanel, BoxLayout.Y_AXIS));
-        errorPanel.setBackground(Color.GRAY);
-        sidePanel.add(errorPanel, BorderLayout.CENTER);
-        sidePanel.setPreferredSize(new Dimension(200, getHeight()));
-        sidePanel.setBackground(Color.GRAY);
-
         add(contentPanel, BorderLayout.CENTER);
-        add(sidePanel, BorderLayout.EAST);
+
+        //boczny panel
+        errorPanel = new ErrorPanel();
+        add(errorPanel, BorderLayout.EAST);
+
 
         //wygaszenie guzików
         findPathButton.setEnabled(false);
@@ -98,8 +91,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
         selectEndButton.setEnabled(false);
         saveMazeButton.setEnabled(false);
 
-        errorMessages = new ArrayList<>();
-
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         displayErrorMessage("Wczytano GUI");
 
@@ -194,23 +186,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
     }
 
     private void displayErrorMessage(String message) {
-        JLabel errorMessageLabel = new JLabel();
-        errorMessageLabel.setText("<html>" + message + "</html>");
-        errorMessageLabel.setMaximumSize(new Dimension(200, Integer.MAX_VALUE));
-        errorMessageLabel.setBackground(Color.WHITE);
-        errorMessageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        errorMessageLabel.setOpaque(true);
-
-        errorMessages.add(errorMessageLabel);
-
-        if (errorMessages.size() > 50) {
-            errorPanel.remove(0);
-            errorMessages.remove(0);
-        }
-
-        errorPanel.add(errorMessageLabel);
-        errorPanel.revalidate();
-        errorPanel.repaint();
+        errorPanel.addErrorMessage(message); // Using custom ErrorPanel's method
     }
 
     private void LoadTextListener (){
@@ -257,6 +233,44 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI{
 
     private void saveBinaryListener(){
 
+    }
+
+    private void closeUI() {
+        running = false;
+        dispose(); // zamykanie
+    }
+
+    public boolean isRunning() {
+        return running;
+    }
+
+    @Override
+    public void update(String input) {
+        switch (input) {
+            case "loadtext":
+                LoadTextListener();
+                break;
+            case "loadbinary":
+                LoadBinaryListener();
+                break;
+            case "findpath":
+                FindPathListener();
+                break;
+            case "selectstart":
+                SelectStartListener();
+                break;
+            case "selectend":
+                SelectEndListener();
+                break;
+            case "savelabirynth":
+                SaveLabirynthListener();
+                break;
+                case "close":
+                closeUI();
+                break;
+            default:
+                displayErrorMessage("Nieznana komenda, użyj: loadtext, loadbinary, findpath, selectstart, selectend, savelabirynth, close");
+        }
     }
     
 }
