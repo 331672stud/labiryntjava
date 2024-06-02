@@ -20,6 +20,8 @@ public class MazeOperations extends Maze implements Observable {
     public boolean choosingStart;
     public boolean choosingEnd;
     private List<Observer> observers = new ArrayList<>();
+    private char LastS='S';
+    private char LastE='E';
 
     @Override
     public void addObserver(Observer observer) {
@@ -352,14 +354,24 @@ public class MazeOperations extends Maze implements Observable {
             if (choosingStart) {
                 int oldStartX = getStartX();
                 int oldStartY = getStartY();
-                ModifyMazeArray(Path, oldStartX, oldStartY);
+
+                if(LastS=='S'){
+                    ModifyMazeArray(Path, oldStartX, oldStartY);
+                }
+                else ModifyMazeArray(LastS, oldStartX, oldStartY);
+
+                LastS=getMazeCell(mazeY, mazeX);
                 ModifyMazeArray(Start, mazeY, mazeX);
                 repaint();
                 choosingStart = false;
             } else if (choosingEnd) {
                 int oldEndX = getEndX();
                 int oldEndY = getEndY();
-                ModifyMazeArray(Path, oldEndX, oldEndY);
+                if(LastE=='E'){
+                    ModifyMazeArray(Path, oldEndX, oldEndY);
+                }
+                else ModifyMazeArray(LastS, oldEndX, oldEndY);
+                LastE=getMazeCell(mazeY, mazeX);
                 ModifyMazeArray(End, mazeY, mazeX);
                 repaint();
                 choosingEnd = false;
