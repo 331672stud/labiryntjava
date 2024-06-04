@@ -136,6 +136,16 @@ public class MazeOperations extends Maze implements Observable {
         return result;
     }
 
+    private void clearpath(){
+        for(int i=0;i<getMazeHeight();i++){
+            for(int j=0;j<getMazeWidth();j++){
+                if(getMazeCell(i, j)==Solution){
+                    ModifyMazeArray(Path,i,j);
+                }
+            }
+        }
+    }
+
     public void FindPathInMazeArray(){
         if (!IsMazeInit()) {
             System.out.println("Nie udalo sie zainicjowac labiryntu");
@@ -158,10 +168,10 @@ public class MazeOperations extends Maze implements Observable {
         }
 
         if (startX == -1 || startY == -1 || endX == -1 || endY == -1) {
-            System.out.println("Nie znaleziono pozycji startu i konca");
+            notifyObservers("nostartend");
             return;
         }
-
+        clearpath();
         // BFS
         boolean[][] visited = new boolean[getMazeHeight()][getMazeWidth()];
         int[][] parentX = new int[getMazeHeight()][getMazeWidth()];

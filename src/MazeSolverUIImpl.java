@@ -278,6 +278,9 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer{
             case "dispUn":
             displayErrorMessage("nieznany znak w labiryncie");
                 break;
+                case "nostartend":
+                displayErrorMessage("nie znaleziono startu/końca");
+                    break;
             default:
                 displayErrorMessage("Nieznana komenda, użyj: loadtext, loadbinary, findpath, selectstart, selectend, savelabirynth, close");
         }
