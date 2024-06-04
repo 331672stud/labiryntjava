@@ -166,6 +166,16 @@ public class MazeOperations extends Maze {
         return result;
     }
 
+    private void clearpath(){
+        for(int i=0;i<getMazeHeight();i++){
+            for(int j=0;j<getMazeWidth();j++){
+                if(getMazeCell(i, j)==Solution){
+                    ModifyMazeArray(Path,i,j);
+                }
+            }
+        }
+    }
+
     public void FindPathInMazeArray(){
 <<<<<<< HEAD
         if (!IsMazeInit()) {
@@ -189,10 +199,10 @@ public class MazeOperations extends Maze {
         }
 
         if (startX == -1 || startY == -1 || endX == -1 || endY == -1) {
-            System.out.println("Nie znaleziono pozycji startu i konca");
+            notifyObservers("nostartend");
             return;
         }
-
+        clearpath();
         // BFS
         boolean[][] visited = new boolean[getMazeHeight()][getMazeWidth()];
         int[][] parentX = new int[getMazeHeight()][getMazeWidth()];
