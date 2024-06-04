@@ -283,6 +283,7 @@ public class MazeSolverUIImpl extends JFrame implements MazeSolverUI, Observer{
                     break;
             default:
                 displayErrorMessage("Nieznana komenda, użyj: loadtext, loadbinary, findpath, selectstart, selectend, savelabirynth, close");
+                System.out.println("Nieznana komenda, użyj: loadtext, loadbinary, findpath, selectstart, selectend, savelabirynth, close");
         }
     }
     
